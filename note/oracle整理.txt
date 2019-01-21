@@ -1,0 +1,517 @@
+SQL标准
+	1、DQL---数据查询语言
+		a、select
+	2、DML---数据库管理语言
+		a、insert
+		b、update
+		c、delete
+	3、TPL---数据事务处理语言
+		a、commit
+		b、rollback
+	4、DCL---数据控制语言，与权限管理相关
+		a、grant
+		b、revoke
+	5、DDL---数据库定义语言，用来创建数据库组件
+		a、create
+		b、drop
+		c、alter
+Oracle SQL
+	DML select,insert,update,delete---数据管理
+	DDL create,drop,alter---管理表
+	TPL commit,rollback,savepoint---事物管理
+	DCL grant,revoke---权限管理
+操作表
+1、创建表
+	create table 表名称(
+		字段名1 字段类型,
+		字段名1 字段类型,
+		...
+	);
+2、修改表
+	alter table 原表名 rename to 新名字;
+3、删除表
+	drop table 表名;
+4、查询表
+	4.1 查看表数据
+		select 字段1 as 别名,字段2 as 别名 from 表名;
+	4.2 查看表结构
+		desc 表名；
+数据操作DML
+1、insert添加数据
+	1.1 标准录入数据
+		insert into 表名 values(值1,值2,...);
+	1.2 录入部分数据
+		insert into 表名(字段1,字段2,...) values(值1,值2,...);
+2、update更新数据
+	2.1 全部更新
+		update 表名 set 需要修改的字段=新值;
+	2.2 局部更新
+		update 表名 set 需要修改的字段=新值 where 条件表达式(字段=值);
+3、delete删除数据
+	3.1 删除全部
+		delete from 表名;
+	3.2 删除局部
+		delete from 表名 where 条件表达式;
+4、查询数据
+	4.1 标准查询(查询全部)
+		select * from 表名;
+	4.2、局部查询
+		select 字段1,字段3,字段5,...from 表名;
+	4.3、昵称查询
+		select 字段1 as 别名 from 表名;
+		select 字段1 别名 from 表名;
+Oracle基本数据类型
+1、字符串
+	1)char(length) 固定长度字符串
+		a、length的范围为(1-2000)
+		b、char默认为char(1)
+		c、因为char为固定长度字符串，所以当
+		   存储的字符串长度不足length时，自动用空格补充
+	2)varchar2(length) 可变长字符串
+		a、length的范围为(1-4000)
+		b、只要不超出length范围，字符串长度可随意变化
+	3)常用函数
+		length():查看字符的个数
+		lengthb():查看字符字节数
+	4)测试函数的方法
+		a、在真实的数据表中测试
+			select length(表字段1),length(表字段2) from 表名;
+		b、自定义数据测试
+			select length('hello世界') from dual;
+	5)获取当前oracle的中文字符编码集
+		select userenv('language') from dual;
+	6)备注：
+		中文 gbk   占2个字节
+		中文 utf-8 占3个字节
+2、数字类型
+	1)number:表示整型，浮点型，双精度型
+	2)number(p,s)
+		p:表示数字的有效位数，包括整数位和小数位
+		s:表示小数位的有效位数
+	3)number(n,0):表示整数
+		number<==>number(38)<==>number(38,0)
+	4)number(9,4)
+		表示数字的有效位数为9，其中小数位数为4位
+3、日期类型
+	1)date 日期类型
+		sysdate:系统当前日期(建议)
+		select sysdate from dual;--->获取当前系统的日期
+	2)timestamp 时间类型(建议使用)
+		systimestamp：系统当前的时间
+		select systimestamp from dual;--->获取当前系统的时间
+oracle事务处理机制
+	1)自动提交事务(隐式提交事务)
+		执行DDL，DCL
+		DDL--->create,alter,drop
+		DCL--->grant,revoke
+	2)自定义提交事务(显式事务)
+		执行DML--->insert,delete,update,select
+		commit;
+	3)事务的回滚
+		a、全部回滚--->rollback;
+		b、局部回滚
+			savepoint s1;
+			rollback to savepoint;
+字符串oracle内置函数
+	第一组 长度的计算
+		length();
+		lengthb();
+	第二组 大小写
+		upper(s);
+		lower(s);
+	第三组 字符串连接
+		a、连接两个字符串
+			concat(str1,str2);
+		b、连接多个字符串，使用管道法'||'
+			select 字段1||'可以拼接字符串'||字段n from表
+	第四组 过滤和补足
+		trim(str):过滤字符串两边的空格
+		ltrim(str):过滤字符串左边的空格
+		rtrim(str):过滤右边
+		
+		lpad/rpad(a,b,c)
+			a--->需要补足的字符串
+			b--->字符串长度
+			c--->若想补足至b长度，补足什么字符串
+	第五组 截取与定位
+		substr(s,begin_index,n)
+			s--->源字符串
+			begin_index--->开始截取位置(包含该索引)，索引从1开始
+			n--->截取的长度
+		instr(str,dest,begin,n) 定位查找，返回索引值
+			str--->源字符串
+			dest--->需要查找的字符串
+			begin--->从哪里开始查找，索引从1开始
+			n--->寻找第几次出现的地方
+数学和数字的函数
+	第一组 进位和截取
+		round(n,s)  四舍五入
+			n--->待处理的数字
+			s--->需要保留的小数位数
+			round(n)--->无小数位，四舍五入后取整
+		trunc(n,s) 直接截取
+			n--->待处理的数字
+			s--->需要保留的小数位数
+	第二组 取模和取整
+		mod(num1,num2) 取模
+		floor(num) 取整，直接舍弃小数位
+		ceil(num) 取整，小数位直接进位
+日期类函数
+	extract() 解析并获取特定内容的日期或时间数据
+	语法：
+		extract(特定的关键字 from sysdate/自定义日期/systimestamp/自定义时间)
+			特定的关键字：
+				year  month day hour minute second
+		cast(systimestamp as timestamp)
+		--->将当前oracle系统的时区转换为安装oracle电脑的时区
+	案例：
+		select extract(hour from cast(systimestamp as timestamp)) from dual;
+
+oracle基本数据类型转换
+	1、字符串、日期、时间的转换
+		to_char(date/timestamp,format)
+		--->将日期/时间类型转换为format格式的字符串
+		
+		to_date/to_timestamp(字符串,format)
+		--->将字符串类型转换为format格式的日期/时间
+		
+		format格式：
+					yyyy:4位数的年
+					year:英文全拼的年
+					mm:两位数的月
+					month:全拼的月 March
+					mon:简写的月Feb
+					dd:两位数字的天
+					day:全拼的星期几 Monday
+					dy:简写的星期 Sun
+					hh:小时数
+					hh24:24小时制
+					am,pm:上午，下午
+					mi:分
+					ss:秒
+					ff:毫秒
+	2、字符串和数字的相互转换
+		to_number(字符串)
+		--->将数字形式的字符串类型转换为数字类型
+		to_char(number,format)
+		--->将数字类型转换为format格式的字符串
+			format格式：
+				9--->代表数字
+				.--->表示小数位
+				,--->表示千位符
+				$--->表示美元符号
+				L--->表示Oracle数据库安装地的货币符号
+Oracle运算逻辑符号
+	第一组 符号类
+		比较类符号：= != <> >= <=
+		运算类符号：+ - * / %
+	第二组 范围 between and
+		语法：
+			(where) 字段名 (not) between A and B;
+			-->表示该字段的值需要(不)在A和B的范围内，含AB本身
+	第三组 is null 或is not null
+		(where) 字段 is (not) null;
+			-->检索出该字段(不)为空值的记录
+		注意：
+			a、null和任何已知类型的数据运算，值均为null
+			b、null连接值时，null会自动消失
+	第四组 模糊查询 like
+		语法：
+			%abc--->以abc结尾   左模糊
+			abc%--->以abc开头   右模糊
+			%abc%--->含有abc    左右模糊
+	第五组 (not) in  (不)在列表项中的范围
+		语法：
+			(where) 字段 (not) in (项目1,项目2,...)
+		备注：
+			between A and B 表示数字值的范围
+	第六组 逻辑 and or
+		语法：
+			where 条件1 and/or 条件n...
+		优先级：
+			and>or
+用户管理
+	创建用户：
+		create user 用户名 identified by 密码;
+	修改用户密码：
+		alter user 用户名 identified by 密码;
+	激活用户：
+		alter user 用户名 account unlock;
+	删除用户：
+		drop user 用户名;
+用户权限管理
+	1、授权权限(connect、resource、dba)
+		grant 权限1,权限2,...to 用户名;
+	2、收回权限
+		revoke 权限1,权限2,...from 用户名;
+	3、重要权限需要用户退出后重新登录才进行加载
+数据表权限管理
+	1、授权权限(all、select、update、delete、insert、alter(只能修改表结构))
+		grant 权限1,权限2,...on 表名 to 用户名;
+	2、收回表权限
+		revoke 权限1,权限2,...on 表名 from 用户名;
+	3、表权限除了drop、create这2个权限属于拥有者，其他权限
+		可以分享select、insert、update、delete、alter
+数据备份
+	1、全表备份
+		create table 副表名 as select *from 主表名;
+	2、数据内部备份
+		create table 副表名 as select ename,empno||deptno,...from sun_emp;
+	3、数据备份是全字段全数据复制，但是约束不复制
+数据同步更新
+	第一步：删除副表的数据
+		delete from 副表;
+	第二步：插入主表信息
+		insert into 副表 select * from 主表;
+	
+=========================================================================
+=========================================================================
+排序查询 order by 
+	语法：
+	(where) order by 字段名(asc/desc);
+	按照该字段名进行排序，asc升序(默认值)，desc降序
+统计函数(聚合函数)
+	count(*)--->统计表的行数，null也计算
+	count(字段名)--->统计有效的字段记录数，不统计null
+	min(字段名)--->统计某个字段的最小值
+	max(字段名)--->统计某个字段的最大值
+	avg(字段名)--->平均值
+	sum(字段名)--->求和
+	备注：
+		统计函数是对数据表进行分组统计的高级函数，
+		若没有分组声明，则视为整个表为一个大组
+
+分组查询 group by
+	语法：
+		(where) group by 字段名;
+		按照该字段名进行全表数据的分组
+	
+表结构修改
+	1、增加字段
+		alter table 表名 add 新字段名 字段类型;
+	2、修改字段
+		a、修改字段类型
+			alter table 表名 modify 字段名 字段类型
+		b、修改字段名
+			alter table 表名 rename column 字段名 to 新名称;
+	3、删除字段
+		alter table 表名 drop column 字段名;
+	4、表别名与字段别名
+		表别名语法：
+			from 表名 表别名
+		字段别名语法：
+			 字段名 as 字段别名
+修改字段空值约束
+	alter table 表名 modify 字段名 字段类型 null;
+主键约束
+	设置主键
+		1、创建表时同步设置
+			语法：创建表的SQL语句最后一行
+				constraint 自定义主键名称 primary key(选中字段名)
+		2、创建表后命令追加
+			a、添加主键
+				alter table 表名 add constraint 自定义主键名 primary key(选中的字段)
+			b、删除主键
+				alter table 表名 drop constraint 主键名称
+		3、建议创建主键方式
+			create table 表名(
+				字段名 字段类型 primary key
+			);
+单表高级查询的6大关键字
+	select：将符合条件的信息显示出来
+	from：数据源
+	where：筛选条件组
+	group by：分组
+	having：和group by绑定，进行二次筛选(分组前和分组后)
+	order by：排序
+子查询
+	语法：
+		a、主查询条件=子查询结果集
+		b、查询结果集 from 子查询--->分页使用
+双表关联查询
+	语法：	
+		select 表别名1.字段1,表别名1.字段2,...,表别名2.字段1,...
+			from 表名1  表别名1,表名2 表别名2
+			where 关联表达式(表别名1.普通字段=表别名2.主键)
+	注意：
+		关联表达式和其他条件的关系是and
+		关联表达式 and 其他(a or b and c...)
+多表查询	
+	多表查询：
+		主表需要有相应的普通字段(外键字段)对应着每一个
+		参考表的主键
+	多表：
+		from 增加多表
+		where 增加主表和参考表嘚关联表达式
+	注意：
+		where 关联表达式 and 其他条件
+复合查询(集合查询、连接查询)		
+	集合查询：
+		4种方式：union、union all、intersect、minus
+		5种场景：
+			intersect：合并多个查询结果集，只获取相同的部分
+			union：合并多个查询结果集，去掉重复的部分
+			minus：合并多个查询结果集,获取2个结果集不同的部分
+				备注：
+					minus左边的查询为主查询A-B
+			union all：合并多个查询结果集,全部的信息，包含重复的内容
+	集合查询语法：
+		select...查询语句A   集合查询关键字
+			select...查询语句B  集合查询关键字
+			...
+			select...查询语句N;
+			
+	连接查询：
+		a、内连接 inner join/join 
+			内连接写法：
+				select t1.*,t2.loc...from sun_emp t1 inner join sun_dept t2 on t1.deptno=t2.deptno;
+			多表关联写法：
+				select t1.*,t2.loc...from sun_emp t1,sun_dept t2 where t1.deptno=t2.deptno;
+			备注：
+				内连接只能查询出符合关联条件的和符合查询条件的信息
+		b、外连接
+			a、左连接left outer join/left join
+				表1 left outer join 表2
+				--->保留表1(左边表)的不满足条件的记录
+			b、右连接right outer join/right join 
+				表1 right join 表2
+				--->保留表2(右边表)的不满足条件的记录
+			c、全连接full outer join/full join
+				表1 full join 表2
+				--->保留2个表都不满足条件的记录
+Oracle伪列
+	定义：
+		在Oracle使用rownum获取前N条记录，rownum被称为伪列，在Oracle数据库创建表时，
+		系统会自动增加一个隐藏列作为记录行信息的序列号
+	语法：
+		select *from (真正的查询) where rownum<=n;
+序列：
+	定义：
+		序列是一种用来自动生成主键序列号的Oracle对象，
+		通常用来绑定主键自定义生成主键序列号值
+	创建语法：
+		create sequence 自定义名称
+		选项属性：
+			start with 起始值--->默认值1
+			increment by 递增值--->默认值1
+			maxvalue 序列的上限值--->默认无穷大
+			minvalue 序列的下限值--->默认起始值 or 1
+			循环选项 nocycle 不循环  cycle循环
+			缓存选项 nocache 无缓存(建议使用，不加载内存中，
+				可以不占用Oracle连接内存资源，减轻数据库负荷)
+	创建后使用语法：
+		序列自定义名称.nextval  返回序列下一个值
+		序列自定义名称.currval  返回序列当前值
+	注意：
+		a、第一次使用序列时需要调用nextval
+		b、序列取值器指针初始状态在第一个只的预备位置
+	功能：
+		作为自动生成主键的工具和计数器，一个序列对象1:1绑定一个表的主键
+索引 index
+	语法：
+		create index 自定义名称 on 表名(字段1)
+		-->为该表的字段1建立索引
+视图 view
+	定义：
+		单表或者多表的查询结果集，一张虚拟的的表
+	作用：
+		1、可以封装一个复杂的且使用高频的SQL查询，
+			开发人员不需要每次运行SQL语句，
+			而是简单的使用select *from 视图即可
+		2、可以屏蔽一些敏感信息
+	特性：
+		1、视图和表操作一样可以使用DML、DDL
+		2、视图可以随元数据表的数据变化而变化
+PL/SQL编程
+	PL/SQL语法：
+		declare
+			声明变量区域
+			begin
+				主体内容(SQL+控制块)
+			end
+	特殊符号：
+		赋值--->   :=     
+		范围--->   ..
+	变量声明
+		a、声明不赋值	 变量名 变量类型
+		b、声明且赋值    变量名 变量类型 :=值
+		eg：
+			sun_salary number(8,2):=0;
+	动态赋值：
+		语法；
+			(select) 字段1 into 变量
+		eg：
+			select sal into sun_salary from sun_emp where ename='MARTIN';
+	PL/SQL打印输出命令
+		set serveroutput on;--->打开PL/SQL语句块控制台输出
+		
+		dbms_output.put_line(字符串);--->打印字符串内容
+	PL/SQL控制语句块
+		1)选择控制
+			a、if else
+				条件表达式 then 语句;
+			   end if;
+			  
+			  if 条件表达式 then 语句;
+			  else 语句；
+			  end if;
+			  
+			  if 条件表达式 then 语句;
+			  else if 表达式 then 语句;
+		      ...
+		      end if;
+			b、switch分支超过5(含)个使用
+				case
+					when 表达式 then 语句;
+					...
+					when 表达式 then 语句；
+				end case;
+		2)循环控制for
+			语法：
+				i number(6):=1;
+				for i in 1..10 loop
+					循环体内语句
+				end loop;
+	案例1：
+		set serveroutput on;   
+			declare
+  				emp_name varchar2(100);
+  				emp_sal number(8,2):=0;
+  				begin
+    				select ename,sal into emp_name,emp_sal from (select ename,sal from sun_emp order by sal desc) where rownum<=1;
+    				dbms_output.put_line('工资最高者：'||emp_name);
+    				dbms_output.put_line('工资为'||to_char(emp_sal,'L999,999,99.99'));
+  				end;
+			
+	案例2：
+		set serveroutput on;
+		declare 
+  			salary number(8,2):=0;
+  			info varchar2(100);
+  			begin
+    			select sal into salary from sun_emp where ename='SCOTT';
+    		case
+      			when salary<1000 then info:='屌丝';
+      			when salary<=3000 then info:='中产';
+      			when salary<=5000 then info:='土豪';
+    		end case;
+    		dbms_output.put_line('该员工收入为：'||salary);
+    		dbms_output.put_line('该员工属于：'||info);
+  		end;
+		
+	案例3：
+		set serveroutput on;
+		declare
+		--变量声明区 类属性声明区
+			counter number(6):=1;
+			location varchar2(100);
+			begin
+				--内容区    主函数体内
+				select loc into location from sun_dept where deptno=10;
+				for counter in 1..20 loop
+					--循环体内
+					dbms_output.put_line(location);
+				end loop;
+			end;
+		
+		

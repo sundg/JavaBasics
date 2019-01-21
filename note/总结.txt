@@ -1,0 +1,33 @@
+springMVC配置文件
+	负责扫描controller层
+	配置试图解析器
+	配置拦截器
+	配置静态资源
+	配置文件上传
+spring配置文件
+	负责扫描非controller层
+	配置数据源
+	配置mybatis、hibernate等数据库框架
+	配置缓存
+	配置aop代理
+JPA：java 持久层API
+	JPA与JdbcTemplate关联关系？
+	jpa:直接操作对象
+	JdbcTemplate：直接操作sql语句
+SOA：面向服务架构	
+	
+	
+	
+spring中单例scope="singleton"与单例模式（Gang of Four gof）中的区别？
+	spring中单例scope="singleton"的准确解释为每一个容器中的每一个bean对象只有一个实例；
+	而单例模式是通过硬编码实现的（懒汉、饿汉）
+	懒汉：先定义未实例化的私有对象，再定义一个公共方法获取该对象，如果此时该对象并未实例化则实例化后返回，如果已经实例化，那么就直接返回该实例对象；
+	饿汉：先实例化私有对象，再定义一个公共方法获取该对象；
+	
+	springIOC容器根据什么区分每一个bean对象？
+	
+DispatcherServlet、RequestContextListener、RequestContextFilter关系
+	都是将http request 请求绑定到服务于当前request请求的线程之上
+
+作用域代理？
+		<aop:scoped-proxy/> 

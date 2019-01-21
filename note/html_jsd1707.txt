@@ -1,0 +1,366 @@
+HTML
+第一章  HTML概述
+1.1
+html：HyperText markup language
+html：编写网页的超文本标记语言，文件后缀.html
+超文本-->包含了文本之外的内容，如图片、视频、超链接
+html编译解析-->浏览器打开并解释
+
+1.2 语法
+1)html标签以开始标签为起始，结束标签为止
+	如<p> ... </p>
+	中间的显示包含在标签体的内容
+2)标签如果没有内容可以简写<p/>
+3)标签的关键字不同，语法含义不同，即内容的显示格式和样式不同
+
+1.3 html第一个案例-->打印一个标题JSD1707班级，HELLO WORLD！
+
+1.4 html文档结构
+	1)<!DOCTYPE html>
+		告知浏览器，当前是html文件，且是HTML5版本，
+		浏览器会按照HTML5标准来解析文件显示文件内容
+	html-->万维网初始第一个网络语言
+	html-->发展虽然迅速，但是野蛮生长，出现了很多问题，且没有统一的标准，产生了很多的版本
+		至今发展30年，产生了7个版本html1,2,3,4,xhtml1,xhtml2,html5
+	
+	W3C国际万维网技术联盟机构发布了标准，让HTML有了秩序，为了浏览器能够更准确的解释可以支持的HTML版本，
+	需要在文档第一行声明HTML版本
+	HTML5标准去开发网页
+	<!DOCTYPE html> -->html5声明语法
+	
+	2)<html><body><head>
+		HTML文档包含声明和三个基本标签
+		HTML-->唯一的根标签，所有的HTML内容均包含在该标签体内
+		<body><head>-->实际包含内容的大标签
+		body-->HTML显示的相关内容
+		head-->设置网页的信息，如关键字
+		
+	3)head标签
+		title  -->定义网页的地址栏标题
+		meta   -->定义网页文件属性信息
+			a、设置网页支持的字符集
+				语法：
+				<meta http-equiv="content-type" content="html/text;charset=utf-8"/>
+				http-equiv 标签的属性  name属性
+				-->网页文件属性的KEY
+				属性值content-type  文件类型
+				字符集属性charset  
+					值utf-8 支持主流的语言，简体中文、英语
+					值gbk   支持所有中文，台湾中文，粤语，繁体字等
+      				值iso-8859-1  支持欧美拉丁语系的、英文
+			b、设置搜索引擎的关键字
+				语法：
+				<meta name="keywords" content="留学移民"/>
+				主动网络营销策略SEO
+			c、大数据时代，针对爬虫技术被动搜索的关键字
+				被动网络营销
+				网页内容概述描述
+				<meta name="description" content="培训的课程有ORACLE,可以投资理财"/>
+		引入外部文件
+			link，script  外部文件
+			style,script  脚本区域
+	4)body标签
+		网页的显示内容标签
+		bgcolor	背景色属性    值--->颜色名或者编号
+		background 背景图片  值--->图片文件路径 
+		注意：背景图片优先级大于背景色
+1.5 html注释
+	<!-- 注释的内容 	可以单行		可以多行  -->
+	
+	
+第二章
+2.1 文本类标签：网页上最重要和最基础的组成部分，包含段落、标题、字体及实体引用等
+2.1.1 标题
+	标题：醒目的文章标题文字，在HTML有6个大小不同的标题，h1,h2,h3,h4,h5,h6   h1最大
+	语法：
+		<h数字>标题内容</h数字>
+	主要属性：
+		文本定位：	align水平居中	left  center  right
+		行内样式通用属性	style
+			font-size:字体大小	值n px(像素点)
+			color：文本颜色		值-->颜色名
+			background-color:标签体背景色  值-->颜色
+			
+		html属性		<属性="值">
+		html和css通用属性
+			<style="key:值;key2:值2...">
+			
+		案例：
+			1，2  right   color-->yellow
+			3, 4  center  color-->pink
+			5, 6  left   color-->blue  font:50px
+2.1.2 段落p
+	显示一段文字内容的标签关键字
+	语法案例：
+		<p>显示一段文字内容</p>
+	主要属性：
+		align & style 同上
+2.1.3 文本格式化和段落的符号
+	<i>斜体
+	<b>粗体
+	<u>下划线
+	-->文字
+	<br/>换行符
+	<hr/>横线	size-->数字
+	-->段落与段落之间
+	style属性
+
+2.1.4  实体引用：为了能够显示HTML关键字和保留符号
+	比如：<body>与<head>的不同
+		 <h1>与<h2>的不同	
+	a、 <	-->&lt;
+	b、 >	-->&gt;
+	c、 空格	-->&nbsp;
+			&lt;h1&gt;与&lt;h2&gt;的不&nbsp;同
+			
+
+综合练习：
+	day0104.html
+	
+	
+2.2 图片<img>
+	语法与常用属性
+		<img src="url"/>
+		src-->找到图片的路径
+			a、绝对路径--->基于图片存放在硬盘的全路径
+							d:xxx.jpg
+			b、相对路径--->基于当前文件的位置，锁定图片的相对路径
+							../imgs/xx.jpg
+		title:图片显示后，鼠标移入显示的文字
+		width/height  若图片过大或过小，可以通过修改宽/高 的尺寸来裁剪缩放图片，值  数字   单位px不用写
+		
+		案例：
+			1、绝对路径
+			2、相对路径
+
+2.3 超链接
+	跳转至另外一个网页或者另外一个网页文件
+	语法和主要属性：
+		<a href="" target="">超链接文字描述</a>
+		href="url" 跳转至另外一个页面路径
+					url文件或者网页的绝对路径或相对路径
+		target  跳转方式  值：self  自身重新加载
+						_blank  重新打开一个窗口加载页面
+						
+	案例：
+		3个超链接--->day0103   day0102
+		
+2.4 列表标签
+	1)有序列表 ol--->ordered list
+		定义有顺序的列表项
+		案例：
+			取马尔代夫旅游办理事宜
+			1、旅行社报名自由行
+			2、缴费
+			3、办理签证
+			4、确定出团时间
+			5、出行准备
+			6、出发去旅游
+		语法：<ol></ol>声明一个有序列表
+			  <li>xxx</li>声明列表项目
+		主要属性：type，style
+			ol type：指明列表项目的标记符号
+	2)无序列表
+		类似有序列表，唯一区别是无序列表的标志
+		案例：
+			江湖人物列表
+		ul  li  ul--->unordered list
+		主要属性type，style
+	3)自定义列表:列表的表示是自定义的
+		图片，文字
+		dl  defined list -->声明一个自定义列表
+		dt  自定义列表的标志
+		dd  列表项
+		描述：菜单，课程体系
+		咖啡喝奶茶
+			咖啡                                                奶茶
+			摩卡咖啡	$35					茉莉绿茶
+			美式咖啡	$35					英伦红茶
+			卡布奇诺	$35					美国黑茶
+			蓝山咖啡	$35					美国葡萄黑茶
+			玛琪雅朵	$35					抹茶
+			猫屎咖啡	$35					珍珠奶茶
+
+2.5 表格
+	整理有组织结构化的信息，有行有列组成，每一个显示单位为单元格
+	表格：行、列，单元格组成
+	创建表格语法：
+		<table> 声明一个表格
+		<tr>声明一个行
+		<td>声明一个cell，一个方格的内容
+	table:
+	border属性:边框   值：数字  px
+	align： center  left  right
+	width height
+	
+	colspan 跨列属性
+		将当前的单元格水平向右延伸   值为数字，表示向右延伸合并几个单元格
+	rowspan 跨行属性
+		将当前的单元格垂直向下延伸   值为数字，表示向下延伸合并几个单元格
+
+
+周六作业
+	1、在线试题HTML页面
+	2、跨行跨列表格
+
+2.6 DIV&&SPAN标签
+	DIV区域标签(标签块)，没有实际内容意义，他是用于组合其他标签的区域容器
+	DIV它是块标签的典型代表，块标签前后自动换行，它可以和css合作，对包含的
+	标签内容做和整体的样式美化。
+	
+	SPAN标签：行标签(内联标签)，它是文本内容的容器，没有实际意义。它是行级
+		标签的典型代表。和css合作可以对容器内的文本做整体美化
+
+
+HTML标签分为2类：1类块级标签  2行级标签
+	块级标签如DIV，前后自动换行
+	行级标签如<a>,不自动换行，自左至右依次排开，知道被自动换行
+HTML文件默认布局流
+	主要的块级标签：
+		h1~h6  form  table  div   li dd  ol  ul  dt tr  td   dl  p
+	主要的行级标签：
+		a  img  span  b   del  input   label  i   u  等
+
+day0204.html
+	img  img 
+	h1
+	ul
+	span a  b
+	span del i
+	p
+
+
+
+第三章  HTML高级
+3.1 HTML嵌套规则
+	1)块级标签可以包含任意行级标签，反之不成立
+		div-->包含b  del i  u
+		b u-->包含table ul 错误姿势
+		<li><del></del></li>
+	2)块级标签不能放在段落p内，p是特殊的块标签，可以放图文和超链接等
+		p--->img  a  b  span  ok!
+		p--->ul  ol  table 错误姿势
+	3)标题类块标签不建议嵌入块级标签
+		h1~h6  醒目的文字标题，建议不含有其他块级内容
+		h1--->span  b  del  a  ok!
+		h1--->ul  table  dl  错误姿势
+	4)td，li，div三个标签拥有最大权限的容器
+		它们可以嵌套除html  head  body之外的所有标签，无限制
+		td--->老项目
+		li，div--->当今主流(重要)
+	5)嵌套的时候，标签要对位，父子标签的对位！
+	
+3.2 html 动画
+	<marquee>主要支持图文
+	语法：
+		<marquee>图文<marquee>
+	主要属性：
+		direction 动画的方向  left  right  down top
+		width/height   动画的范围
+	案例：文字往左移动500px
+		<marquee direction="left" width="300">鲁班7号</marquee>
+
+3.3 表单<form>
+	3.3.1  定义：表单就是网页中负责收集数据的输入标签组件集合，收集各种用户
+			交互的信息提交至后台处理，完成商业交互
+	3.3.2 语法和属性
+		表单标签	<form></form> 声明一个表单
+		属性：
+			action--->数据收集后提交至后台的处理程序路径
+			method--->数据收集后提交至后台的方式
+			enctype--->当表单需要上传文件时，需要设置提交数据为多媒体方式
+			
+			action="url"  提交后跳转至url指定文件
+			method=post(后台提交，提交数据不可见)
+					or get(直接提交，地址栏可见)
+			enctype="multipart/form-data"多媒体数据提交模式，因为包含文件数据
+			
+		表单子标签共12（标准标签库）
+			12个标签分为2类，通用input类，非input类
+			<input>:表单通用输入组件，通过type指定的值得不同，表示不同的输入控件
+				第一组：文本密码框
+				type="text"-->文本输入框
+				password--->密码框
+					通用属性：
+					id-->控件的唯一表示，身份证号
+					name--->控件的名字
+					value--->文本框的值  提交的值或默认值
+					maxlength--->输入的最大字符数
+					readonly--->只读readonly="readonly"
+					disabled--->禁用  disabled="disabled"
+				案例：登录页面制作
+				第二组   按钮组
+				type= submit  image  button  reset
+				submit  image-->表单自动提交按钮,点击之后会跳转到action指定的文件
+				submit--->普通按钮形态
+				image--->自定义图片按钮形态
+				value--->按钮的文本
+				id,name,style,disabled
+				image-->width/height修改图片尺寸
+						src自定义图片按钮的图片路径
+				reset--->自动重置
+				value--->按钮的文本，id,name,style
+				button-->id,name,style,disabled,value，自定义按钮，和js，jq动态脚本绑定使用
+				案例：登录页面制作改善
+					submit-->快速登录    背景黄色   disabled
+					
+				第三组  选择
+				type=checkbox  复选框  单选或者多选
+				主要属性：
+					name:一组复选框的名字
+					value:勾上复选框后，提交至后台的数据
+					checked：选中状态 checked="checked" 默认选中
+					
+					typy="radio" 单选按钮，只能选一个，前提是同一组
+					name:一组单选按钮
+					checked：选中状态
+					checked="checked" 默认选中
+					value:勾上复选框后，提交至后台的数据	
+				第四组	特殊
+				1)hidden  隐藏域，在表单中加入不希望用户看到的信息，但是却很重要，包含在提交数据中
+					-->提交一个不可见的一组数据  key：value
+					语法：
+					<input type="hidden" name="身份证号" value="42314676236432" />
+				2)上传文件
+					语法：
+					<input type="file" id=" " name=" " />
+					form 设置enctype属性为多媒体表单数据
+			
+			非input输入组件
+				1、<select>  下拉框
+					语法：
+					<select></select> 声明一个下拉框
+					<option></option> 声明一个选项
+					option标签属性：
+						style,value,selected
+						value:提交至后台数据
+						selected:选中状态  selected="selected"
+					select标签属性：
+						name,style,id,disabled
+					案例：增加一个注册地点
+						国家     城市
+						中 		南京
+						美 		纽约
+						英		伦敦
+				2、<textarea> 多行文本域
+					语法：
+						<textarea>显示的文本内容</textarea>
+					主要属性：
+						id,name,style,readonly,disabled
+					cols:指定文本的列数
+					rows:指定文本的行数
+					cols&&rows-->用来设定初始化多文本域的大小
+
+3.3 HTML5初体验
+	video播放视频
+		目前为止，我们学习的都是HTML标准标签库的核心内容
+		
+	H5和标准库HTML标签区别
+		H5多了一些新的标签，带来梦幻绝伦的效果，绝佳的用户体验
+
+-----------------------------------HTML END-------------------------------------------------------
+
+
+
+
+

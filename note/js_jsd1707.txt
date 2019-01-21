@@ -1,0 +1,497 @@
+JavaScript
+第一章  JS基础
+1.1 what
+	javascript广泛用于客户端web开发，是一种基于对象和事件驱动的脚本语言(客户端动态开发语言)
+	js视角--->HTML每一个标签都是一个动态对象，基于对象所发生的事件或者行为程序处理的动态开发机制
+1.2 JS重要特性
+	html--->网页内容结构  表格  表单  列表等
+	css--->美化网页标签
+	js--->动态网页编程，可以和用户互动
+		1、嵌入在HTML文件中，可以跨系统平台使用  windows mac  liunx
+		2、可以和HTML语句分开，类似于样式表，便于维护，可以实现动态特效的隐形
+		3、基于对象的事件(行为)，只有当特定的行为发生，才会触发和调用相应的JS语句块
+1.3 JS语法
+1.3.1 声明JS语句块
+	建议在head标签中嵌入
+	<script>
+		js语句;
+		...
+	</script>
+1.3.2 js第一个例子hello world
+	js输出内容方法：
+		document.write(内容);
+	备注：
+		网页可以多出包含JS脚本语句块，执行顺序从上至下的读取顺序
+	建议：(约定俗成)
+		建议页面的js脚本只声明一处，并放在head标签内，
+		代码更简洁，便于维护，不会过多干扰HTML的代码
+		
+1.3.3 html引入js的三种方式
+	1)行内脚本，基于事件句柄
+	2)内部脚本，head标签内script声明
+	3)外部脚本文件引入
+	通用事件： 鼠标单击事件  onclick=js动态脚本
+		style=css样式
+	
+	引入语法：
+		<script type="text/javascript" src="../js/abc.js"></script>
+		外部js文件
+1.4 综合练习
+
+1.5 核心语法 九宫格
+1.5.1 变量
+	声明变量的关键字var，所有类型均适用
+	var abc=内容;
+	1)先声明变量再赋值
+		var abc; abc=100;
+	2)声明同时赋值
+		var abc=100;
+	3)一条语句多个变量
+		var x=10,y=19,z=12;...	
+1.5.2 数据类型
+	undefined--->当变量被定义后，却，诶呦赋予值，则JS会默认该变量值为未定义
+	null--->空值(返回object类型)
+	number--->包含表示了整型、浮点型、双精度型
+		在js，依据值的精度不同，自动判定类型
+		var num1=12; int   var num2=12.23;  float     var num3=12.22222;  double
+		string      boolean
+	js提供一个内置函数typeof(变量名)
+	   --->判断参数属于哪个类型，返回判断结果
+1.5.3 js运算符号与逻辑符号
+	a、算数运算符 +-*/% ++ --
+		算数表达式过长时，需要使用小括号，先运算，后拼接字符串
+	b、赋值运算符 =
+	c、比较运算符 > < >= <= != ==
+	d、逻辑运算符  && || ！
+1.5.4 js注释
+	和java一致
+	//单行
+	/**/多行
+	
+1.5.5 输入输出
+	1)alert();--->弹出信息框
+		语法：
+			alert(提示的信息);
+	2)confirm();--->确认弹出框
+		语法：
+			confirm("提示的问题yes  or  no");
+			confirm返回值--->  true--->确定按钮
+							   false--->取消按钮
+	3)prompt();--->对话框
+		语法：
+			prompt(问题提示信息,输入框的默认信息);
+			返回值：--->用户输入的内容
+1.5.6 数组 --->js内置object,date,Object
+	创建一个数组：
+		var 数组名称= new Array(数组的长度);
+	赋值：
+		数组变量[索引]=值;     索引从0开始
+	读取：
+		直接打印   数组变量[索引],打印该索引对应的值
+	属性：
+		length--->返回数组的长度
+		join--->把数组的所有元素拼接成一个字符串
+		语法：
+			join(分割符号)
+1.5.7 控制语句
+	1)if 
+	  if else
+	  if else if ...else
+	  语法：
+	  	if(boolean表达式){
+	  	}else if(boolean表达式){
+	  	}...else{}
+	 //confirm--->true  打印图片信息
+	 			  false welcome		
+	2)for循环
+		语法：
+		for(var i=0;i<循环条件;i++){js语句}	
+	中断循环：
+		break--->跳出循环，不在执行属于的循环
+		continue--->跳出当次循环，且依然执行后续循环
+		案例练习：
+			1)喝完第55杯，后面不喝，跳出循环
+			2)刚要喝第83杯，客户来了，没有喝第83杯
+	3)while
+		语法：
+			while(循环表达式){
+				js语句;
+				break;or continue;
+				循环条件++;
+			}	
+	案例：for第二个案例，用while重写
+	
+	4)switch--->多个else if
+		备注：
+			分支超过5个以上，建议使用switch开关语句
+		案例：
+			显示5个英雄的名字，根据用户的选择，显示相应的英雄照片
+		补充：
+			创建数组的简写声明
+			var 数组名=["值1","值2","值3"...];
+		语法：
+			switch(变量){
+				case value1:js语句;break;
+				case valeu2:js语句;break;
+				...
+				defualt:js语句;
+			}
+1.5.8 语法约定
+	1) js代码区分大小写
+		var abc;   var aBc;是2个不同的变量
+	2)变量命名，不要以数字开头，不要使用关键字保留字和特殊符号
+	3)每一个语句用分号结尾、
+
+第二章   js进阶
+2.1 自定义函数(方法)
+2.1.1 函数的定义
+	是由事件驱动来调用执行可重复使用的代码块
+2.1.2 函数分类
+	1、自定义函数(自定义有名函数)
+	2、匿名函数(自定义无名函数)
+2.1.3 如何创建函数
+	语法：
+		function 函数名字(参数列表){函数体}
+	自定义函数创建语法
+		1)无参无返回值
+			function 函数名字(){js语句;...}
+		2)有参无返回值
+			function 函数名字(参数1,参数2,...){js语句;...}
+		  备注:
+		  	参数无限制，逗号隔开即可，且无需声明类型
+		3)有返回值
+			function 函数名字(参数1,参数2,...){js语句;...;return 变量或者值;}
+		  强调：方法创建后不会立即执行，只有在调用的时候才会执行代码块
+		  	调用方式：
+		  		事件属性=方法名()	
+		       补充：
+		       parseInt(字符串变量)   将字符串转化为数字类型返回
+	匿名函数：
+		相比较有名字的函数可以定时调用，匿名函数同样可以
+	  匿名函数声明2种方式：
+	  	1、直接运行的
+	  		语法：
+	  			(function(){alert(xxx)})();	
+		2、声明代号--->把函数体内容保存在一个变量中，则这个变量可以当做是这个匿名函数的昵称
+			语法：
+				var ff=function(){js语句;...};
+		备注：为什么使用匿名函数
+			1、不需要重复调用的代码块，需要使用匿名函数
+			2、安全性
+			3、可以连续书写一系列代码，代码集中(JQuery)
+2.2 js常用内置函数
+	1)数学和数字的常用函数
+		random()  返回0-1之间的随机数
+		round(num)   把参数四舍五入为最接近的整数
+		floor(num)   把参数的小数位舍去
+		语法：
+			Math.方法
+		parseInt(str),parseFloat(str)  返回字符串数字的数字形态
+		isNaN(num) --->false 数字           true非数字 
+	2)字符串函数
+		a、concat();连接多个字符串
+			语法：
+				str1.concat(str2);
+				str1.concat(str2).concat(str3)....
+				str1.concat(str2,str3,str4....);
+				str1.concat(str2,str3).concat(str4);
+			var str=拼接表达式;
+		b、substr()截取字符串
+			语法:
+				substr(num1,num2);返回截取后的字符串
+				num1--->从第num1字符开始截取，索引从0开始计数
+				num2--->截取num2个字符
+			案例:
+				var m1="abcdefghijklmn"
+				截取fghij
+			
+		c、substring()截取字符串
+			语法:
+				substring(num1,num2);返回截取后的字符串
+				num1--->从索引num1位置开始截取，索引从0开始计数
+				num2--->截取字符串结束索引num2位置
+				返回截取后的字符串，包含开始的索引号，但是不包含结束索引号本身的字符
+
+	3)日期--->JS内置对象类型  同Math，Array
+		a、日期的构造函数
+			var date=new Date();---->获取当前的时间
+			var date=new Date(year,month,day,hour,minutes,sceonds,milliseconds);
+			参数是number类型
+			备注：
+				参数可以缺失，缺失原则后面截取
+				中间参数缺失，必须以0来代替
+			案例：
+				1、当前时间
+				2、2017-10-1
+				3、2017-9-8 12：01：01：333
+			备注：
+				在js毫秒数是三位数
+				month:0~11    weekday:0~6
+			常用方法：
+				1、获取getHours(),getMinutes(),getSeconds()...
+				2、设置setHours(),setMinutes(),setSeconds()...
+				3、转换toString(),toDateString(),toTimeString()
+2.3	js调试(debug)和异常处理机制
+	try---catch--->类似java
+	try--->语句块定义在执行时抓取可能的异常代码块
+	catch--->发生错误时，处理的代码块
+	语法：
+		try{
+			js语句...;
+		}catch(自定义异常对象名){
+			自定义异常对象名.message--->错误信息	
+		}
+2.4 javascript自定义对象的创建和使用
+	1)创建自定义对象
+		var student=new Object();
+	2)创建属性且赋值
+		student.name="Marthin";
+		student.age=30;
+		student.face=99.99;		
+		备注：
+			属性的类型不需要声明
+			实例化自定义对象.属性名字--->创建属性
+			读取属性--->实例化自定义对象.属性名字
+	3)创建自定义对象方法
+		student.dance=匿名函数体;
+		student.dance=function(参数列表){js语句};
+		调用方法：
+			onclick=abc();
+			onclick=student.dance();
+2.5 js全局变量和局部变量
+	a、全局变量：声明在script标签内，页面中任何地方都可以访问
+	b、局部变量：声明在函数(方法)体内，只有该方法可以使用
+	
+第三章   js高级应用(重点重点******)
+3.1 DOM模型与document对象
+3.1.1 什么是DOM模型
+	DOM document object model 国际前段开发权威机构w3c定义的
+	一套标准方法来访问和操作管理网页上所有内容，包含标签，样式，
+	标签内的动态效果等。
+	
+	javascript就是基于DOM模型提供的方法来操作网页所有元素的。
+	
+	DOM定义如何获取网页元素-->把整个网页解析成树形结构的文件，
+		每一个标签是一个节点，如有子节点则形成分支，类似家族族谱
+		每一个标签对象(节点)有文本内容和属性描述。
+		
+	DOM模型提供的标准方法包含四组：
+		DOM HTML--->用来管理HTML标签对象，及其自带属性，文本内容
+		DOM CSS--->用来管理HTML标签对象的样式
+		DOM NODE--->动态增加或删除，编辑HTML标签对象
+		DOM EVENT--->负责管理标签的行为(事件处理)
+		
+3.1.2 document对象
+	DOM模型的实例化全局对象，document可以调用jsDOM模型提供的一切方法
+		如：document.write();
+3.2 document核心三方法--->获取特定的标签对象
+	1)getElementsByTagName(标签关键字)
+		--->获取同一类标签对象的集合
+	语法案例：
+		document.getElementsByTagName("h1");
+		-->获取页面上所有的h1标题对象
+	案例：
+		让页面所有标题一居中且背景为天蓝色
+	补充：
+		标签对象.属性(html自带属性)=new value;
+		--->修改属性值
+	备注：
+		获取只有一个对象，返回结果对象依然是数组对象，数组长度为1而已
+	2)getElementsByname("name属性对应的值");
+		--->跨标签使用
+		--->获取并返回页面上所有name属性值匹配的标签对象集合
+	3)getElementByID();
+		--->获取唯一一个对象
+	备注：针对于复杂的页面中简单精准的获取某一个标签对象
+		ID属性--->身份证，标签唯一标识
+		若出现ID重复
+3.3 DOM HTML
+	操作HTML自带属性--->操作HTML标签的结构和文本
+3.3.1 2个重要的属性
+	innerHTML--->改变HTML标签内部结构和文本
+		如：div h1--->div ul+img
+	innerText--->改变HTML标签文本
+	备注：
+		document.write(html内容);
+		该方法有局限性，建议在页面加载时初始化时使用，若页面加载完毕之后再调用该方法，则原文件会被覆盖
+3.3.2 HTML自带属性设置和访问
+	获取 html_obj.自带属性
+	设置 html_obj.自带属性=新值
+	案例：全选和全不选
+	特殊情况：
+		checked、disabled、selected
+		checked="checked"===》checked=true,false
+3.3.3 HTML自带集合属性
+	DOM模型提供页面标签集合属性，用来自动加载页面中特定的标签集合
+	常用的集合属性有1、forms  2、images
+	语法案例：
+		forms[1]--->获取并自动加载页面第二个表单标签
+		images[2]--->获取并自动加载页面第3张图片
+		顺序按照浏览器读取执行顺序计数		
+	补充样式：
+		visibility：visible/hidden
+homework
+	lab1:选中(5)checkbox的图片，可见或不可见
+
+3.4 DOM CSS
+	DOM模型提供一套自由样式属性来匹配CSS原声样式属性，语法，语义99%一致，
+	除了属性名书写规范不一样
+	
+	原生样式--->CSS样式属性的本身(CSS1~3)
+		使用原生样式语法：
+			obj.style="css原生属性:值"
+			--->css帮助手册
+	DOM CSS自由属性语法：
+		obj.style.DOM CSS属性="值"
+		--->DOM CSS STYLE帮助手册
+	案例：图片变大变小
+	补充事件：
+		onmouseover   onmouseout  鼠标移入移出
+		
+3.5 DOM EVENT 时间 行为
+	1)事件：指标签对象的行为动作
+	2)声明：事件句柄=事件触发的函数
+		事件句柄--->具体的事件行为
+	3)分类：
+		a、鼠标事件
+			onclick 
+			ondblclick  
+			onmouseover  
+			onmouseout
+		b、键盘事件(输入的标签对象)
+			onkeydown  
+			onkeyup   按下的键盘松开时  
+			onkeypress  按一下键盘
+		c、状态事件
+			onload 网页加载时触发的事件
+			onchange 值发生变化的时间
+			onfocus 标签获取焦点事件
+			onblur 标签失去焦点
+			onsubmit 表单提交事件	
+		d、事件相关对象
+			this--->触发事件的当前标签对象
+			event--->是事件发生后的对象，记录着事件发生的信息，如按下哪个键盘键？
+3.6 DOM NODE(ELEMENT)
+	动态生成标签对象和删除标签对象
+	便于管理维护，每一个节点都是一个对象
+	~DOMHTML  innnerHTML
+	简单便捷，但是字符串难以维护
+	1)如何创建
+		document.createElement(标签关键字);
+		--->返回一个Element节点对象var
+		var abc=document.createElement(h1);
+	2)如何追加至父节点
+		父节点对象.appendChild(新增的子节点对象);
+		div_obj.appendChild(abc);
+		备注：
+			追加节点只能逐级增加--->父子
+	3)如何删除节点
+		语法：
+			父节点对象.removeChild(子节点对象);
+		备注：
+			追加节点只能逐级移除--->父子
+	4)修改--->DOM HTML   DOM  CSS	
+	
+	案例：onload()--->body
+		加载div--->h1  p  img  img
+			1、删除2个图片
+			2、创建一个列表追加
+		
+		
+homework
+	姓名_____ 科目_____  成绩_____   录入数据    基本
+	
+	修改:行数____
+	姓名_____ 科目_____  成绩_____   修改数据    高级
+	div--->table
+			姓名         科目      成绩
+			陈超        oracle  100	
+			陈超        oracle  100	
+			
+3.7 BOM模型与windows对象
+	浏览器对象模型，js通过BOM模型提供的全局对象及其方法属性来操作浏览器
+	
+	BOM模型某种程度来说是包含DOM模型的
+		window-->document;location等
+3.7.2 window对象
+	window就是BOM模型的实例化对象，可以在js直接引用全局最顶级的变量，它包含浏览器各种组件对象，如地址栏对象location
+	还包含重要的网页全局对象document
+	备注：
+		所有的对象都属于window，所以会缺省
+	window主要方法：
+		1、输入输出alert()  confirm()  prompt()
+		2、打开关闭open()   close()
+			语法：
+				关闭：close();
+				firefox--->about:config-->allow_scripts_to_close_windows;
+				open(URL,打开方式);  标准版
+				open(URL,打开方式,窗口特性);  多功能版
+		3、定时执行setInterval()  clearInterval()
+			setInterval()--->定时执行任务
+			语法：
+				var obj=setInterval(执行函数,毫秒数);
+				--->返回定时任务对象，且开始执行定时任务
+			clearInterval()--->取消定时任务
+			语法：
+				clearInterval(obj定时任务对象);
+			案例：
+				时钟秀       11：45：01   启动    停止
+3.7.3 window子对象
+	screen屏幕
+	screen.availWidth--->屏幕的宽
+	screen.availHeight--->屏幕的高
+	
+	location 地址栏--->自定义超链接
+	location=url
+	--->类似于超链接的跳转
+	
+3.8 表单验证
+	定义：
+		表单提交数据，js验证值的合法有效性，通过做放行跳转，
+		不通过给与反馈提示，直至通过或取消
+	验证方式：
+		1)定制表单
+			声明：(表单验证)
+			form insubmit="return 函数"、
+			--->验证表单的执行函数，且返回值是bool值
+			true--->跳转至action指向的url
+			false--->不做任何跳转
+			提示：定制表单提交组件
+			input type=submit
+			input type=image
+			案例：
+				登录      anmin   123456
+		homework   
+			增加6位随机验证码，验证码一致方可通过
+			增加图片按钮type=image
+		2)自定义提交location  onchange
+			type=button
+			
+1、图片切换
+2、下拉框联动
+3、订单界面
+************************************END  JS*************************************************************************		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+		
+		

@@ -1,0 +1,1108 @@
+Oracle 
+课前环境调试准备
+	1、远程环境   jsd1707     jsd1707
+	2、本地环境
+		sqlplus as sysdba   最高管理员登录
+		密码：没有，直接回车
+		
+	激活本地oracle普通管理员账号
+	1、重置system
+		alter user system identified by xxx;
+	2、激活system账户
+		alter user system account unlock;
+	3、连接本地oracle
+	
+	
+第一章 Oracle概述
+programmer--->database dba
+1.1 什么是数据库
+	数据库就是按照某种数据结构来组织、存储、管理的数据的仓库系统。
+	table:字段、数据、表结构
+	-->win8  管理各种文字文件和软件
+	-->oracle 管理各种数据文件和运行程序
+1.2 数据库发展
+	1970 数据库技术问世(关系型数据库)
+	1974 SQL标准发布
+	1976 ORACLE问世
+	现今-->集群化的大型关系型数据库，大数据内容型，大数据智能型等
+	未来-->数据库类别更加精细，更加智能，声音，指纹等多媒体数据
+1.3 作为开发人员，聚焦关系型三大数据库，这三大数据库依然是当今数据处理科技的主流
+	1、Oracle--->当世第一，全球500强90%以上的企业均使用Oracle
+	2、MySql--->2000以后被Oracle收购
+	3、SQL Server
+	集群化的大型关系型数据库
+	关系型数据库：基于数据表为存储单位的数据库
+1.4 SQL标准
+	SQL structured query language结构化查询语言是关系型数据库设
+	计开发及数据查询管理德国际标准语言
+	SQL独立于数据库软件之外，所有的关系型数据库的厂商必须满足SQL语言
+	的标准，因此，大部分的关系型数据库的SQL都是大同小异的。90%一致，
+	10%是局部的关键字的区别，和扩展的SQL语言如Oracle的PL/SQL
+	a、关系型数据库--->SQL语言--->实现SQL的语法接口
+	b、非关系型数据库--->和SQL无关系，因为SQL好用，被多数技术人员所熟知，习惯
+	c、关系型数据发展--->超过了国际机构的认知，未定义部分出现了差异化发展--->某些关键字不一样
+1.5 SQL标准是什么？
+	SQL标准接口有5个部分
+	1、DQL data query language
+		数据查询语言
+		key words：
+			select(查询数据)
+	2、DML data manage/manipulation language  
+		管理数据库的语言
+		key words：
+			insert(录入新的数据)
+			update(更新数据)
+			delete(删除)
+	3、TPL transaction process language
+		数据事物处理语言
+		key words：
+			commit
+			rollback
+	4、DCL data control language	
+		数据控制语言--->数据库权限管理相关
+			key words：
+				grant
+				revoke
+	5、DDL data definition language
+		数据库定义语言--->用来创建数据库组件
+		key words：
+			create(创建)
+			drop(删除)
+			alter(修改)
+		eg：alter user sytstem idetified by 密码;	
+1.6 Oracle SQL 
+	DML select,insert,delete,update 数据管理
+	DDL create,drop,alter	表管理
+	TPL commit,rollback,savepoint 事物管理
+	DCL grant,revoke 权限管理
+
+第二章 Oracle基础(重点)
+2.1 表操作 DDL
+2.1.1 创建表
+	create table 表名称(
+		字段名1  字段类型,
+		字段名2  字段类型,
+		...
+	);
+	补充：
+		Oracle字符串
+		java  String     js   var     oracle   varchar2/char
+		定义字符串--->定义字符串长度
+		语法：
+			varchar2(50) 上线为50个长度
+		创建学生表   test_student
+			学号、姓名、性别、专长
+	补充：
+		1、注释  -- 单行注释
+		2、desc 表名;-->查看表结构命令
+		3、select *from 表名;--->查看数据	
+2.1.2 修改表 alter table
+	修改表名称:
+		语法：
+			alter table 原表名  rename to 新名字;
+	补充：给字段取别名，取昵称
+		语法：
+			字段   as 别名(显示名)
+			
+					
+2.1.3 删除表 drop table
+	语法：
+		drop table 表名
+2.2 数据操作 DML   select,insert,update,delete
+2.2.1 insert 添加数据
+	1、标准录入数据--->匹配表中每一个字段的数据，即全部的字段都需要匹配信息
+		语法：
+			insert into 表名 values(值1,值2,....);
+			逗号分隔，值和字段的顺序一致且数据类型一致
+		eg:insert into sun_student values('004','吴京','男','导演');
+		注意：
+			在oracle当中录入字符串时，需要用单引号
+	2、局部录入数据
+		如果只有某个列的数据，缺失的并不是必填项如何新增数据
+		语法：
+			insert into 表名(列出匹配字段名列表，逗号分隔) values(匹配列出的字段的值);
+		注意：
+			没有匹配的字段值，oracle自动赋值null空值
+		案例：
+			黄晓明   性别不明
+			李云龙   技能不能
+		eg:	insert into sun_student(stuNo,stuName,stuSkill) values('006','黄晓明','演技');	
+			insert into sun_student(stuNo,stuName,stuSex) values('007','李云龙','男');
+2.2.2 查询数据
+	1、标准的全部查询
+	select *from 表名;
+		* --->代表全部字段的简写
+		from--->从哪里去获取数据
+		eg:
+		select *from sun_student;
+	2、局部查询
+		select 字段1,字段3,字段5,...from 表名
+		eg： 
+		select stuno,stusex from sun_student;
+	3、昵称查询--->只是改变了显示的名称，实际内容不变
+		a、select 字段1 as 别名 from 表名;
+		b、select 字段1  别名 from 表名;
+		eg:   
+		select stuno as 学号,stusex as 性别,stuskill as 特长 from sun_student;
+2.2.3 更新数据update
+	可以更新任意字段的数据，跟新任意行的数据
+	1、全部更新(某一个字段列)
+		语法：
+			update 表名 set 需要修改的字段=更改字段
+		eg：
+		update sun_student set stuSex='男';
+		该字段的所有行数据全部--->男
+	2、局部更新(某一个字段列，不过还有更新条件)
+		更新表达式+where条件表达式(字段=值)
+2.2.4 删除数据 delete
+	1、删除全部
+		语法：
+			delete from 表名;
+	2、局部删除(有条件删除)
+		语法：
+			delete from 表名 where 条件表达式
+		案例：删除会跳舞的学员
+			 delete from sun_student where stuSkill='跳舞';
+			  删除学号005的学员
+			  delete from sun_student where stuNo='005';
+			  删除剩余全部的学员
+			  delete from sun_student;
+		备注：
+			在oracle中，关键字和表字段名，表名大小写不敏感，但是在数据中大小写敏感
+			eg:
+				dEleTe from sun_student;
+					
+2.3 Oracle基本数据类型
+	1、sqlplus命令行数据库工具(oracle自带)
+		01 sqlplus as sysdba;--->最高管理员登录当前oracle数据库系统
+		02 show user;--->显示当前用户的身份
+		03 select *from dual;
+			dual--->数据字典，空表 --->若查询结果为X--->当前用户可以访问数据
+		01~03 完成登录确认，用户确认，数据访问能力确认--->当前数据库可以正常使用
+		
+		普通DBA用户--->SYSTEM
+		
+		04 alter user system identified by 123456;--->重设密码，激活system账户
+		05 alter user system account unlock; --->解锁用户，这样用户才可以正常使用数据库资源
+		06 system--->sqlplus、sql、developer连接oracle服务器，并且访问数据
+		04~06 激活system，用该账户连接和管理oracle
+	2、sqldeveloper 甲骨文公司提供的标准的图形界面的工具
+	3、第三方工具     更易操作，更友好的图形界面工具
+2.4 Oracle基本数据类型
+	三大基本类型：字符串、数字、日期
+2.4.1 字符串
+	1、char(length)      1<length<2000		固定长度字符串
+		a、char--->char(1)
+		eg：  char(10)
+		该字符串长度为10，如果值只有abc，因为固定长度，所以数据会自动补足7个空格(浪费数据库资源)
+	2、varchar2(length)  1<length<4000		可变长度字符串(强烈建议使用)
+		eg：varchar2(10)
+		随着字符串的长度变长而变长，变短而变短，只要不超出定义范围，即字符长度不能超过10
+		
+	常用函数：
+	length()--->查看字符的个数
+	lengthb()--->查看字符字节数
+	用法：
+		length(测试的字符串)--->返回数字
+	案例：
+		create table sun_test(
+  			c1 char(20),
+  			c2 varchar2(20),
+  			c3 char
+		);
+		insert into sun_test values('abc','abc','1');
+		insert into sun_test values('abc','abc','001');--->报错
+	在Oracle中测试函数的2个方法：
+		1)真实实时表数据做测试from 真实的表
+			语法：c1，c2
+			//表中数据字符串的长度
+			select length(c1),length(c2) from sun_test;
+				
+		2)自定义数据测试  from dual;
+			select length(自定义测试内容) from dual;
+		案例：
+			测试一下：hello，你好世界
+			select length('hello') from dual;
+			select length('你好世界') from dual;
+		备注：
+			字节数   英文   1
+				   中文    gbk    2个字节
+				   	   utf-8  3个字节
+		命令：
+			获取当前oracle的中文字符编码集
+			select userenv('language') from dual;
+2.4.2 数字类型
+	number--->表示整型，浮点型，双精度型
+	语法：
+		number(p,s)
+		p-->数字的有效位数，总的长度包含整数位和小数位
+		s-->表示小数位的有效位数
+			75.333   p--->5    s--->3
+			int count=10;
+			number(5,0) <==>number(5) <==>  1~99999
+			number <==>number(38,0) <==>number(38)
+			录入数字型数据时，正常录入即可
+			float sal=9000.555L;
+			number(9,4) 
+		案例：
+		create table sun_test02(
+  			emNo number(5,0),
+  			emName varchar2(50),
+  			emAge number(4,1),
+  			emSal number(9,3)
+		);  
+		INSERT INTO sun_test02 values(7001,'岳不群',21,50000.78);
+		INSERT INTO sun_test02 values(8001,'芈月',360,50000.78);
+2.4.3 日期类型
+	1)date 日期类型
+		sysdate:系统当前日期
+	2)timestamp 时间类型(建议)
+		systimestamp:系统当前时间
+	
+	select sysdate from dual;
+	select systimestamp from dual;
+2.5 Oracle事务处理
+2.5.1 什么是事务
+	事务是指作为单个逻辑工作单元执行的一组操作。
+	事务就是一个完整的事情。
+	事务工作核心目的--->确保每一个商业行为的数据完整性
+	事务规定：事情只有完成和不完成
+		完成--->数据统一提交并永久保存
+		不完成--->数据统一恢复到初始状态(基于当前事务)
+2.5.2 oracle事务处理机制
+	1)自动提交事务(隐式提交事务)
+		执行DDL，DCL
+		DDL--->create,alter,drop
+		DCL--->grant,revoke
+	2)自定义提交事务(显式事务)
+		需要提交事务时，人为手动提交某个事务，执行DML	
+		DML--->insert,delete,update,select
+		手动提交事务--->commit;(管理员可以使用事务提交按钮)
+			一旦执行commit，数据才会永久保存在数据表中，直至下一个事务的更新。
+		手动提交事务--->用来封装某几个SQL语句，基于实际的业务逻辑
+		commit;
+		rollback--->回退至当前事务开启的初始状态
+		savepoint--->保存记录点(事务当中，每个SQL命令相对独立的情况)
+	备注：
+		在oracle中，没有提交的数据并没有保存，只是临时存放在临时的数据表(空间)中
+	案例：银行转账
+		1)全部回滚
+		2)局部回滚
+			先设置记录点--->savepoint  名称
+			假设有问题需要回滚至相应记录点
+			rollback to savepoint;
+		3)全部提交
+2.6 oracle内置函数
+2.6.1 字符串内置函数
+	第一组 长度的计算
+		length()
+		lengthb();
+	第二组 大小写
+		upper(s) 转换成大写字母
+		lower(s) 转换为小写字母
+	案例：
+		select upper('hello Abc!') from dual; 
+		select lower('WELCOME ABC!') from dual; 
+	SCOTT--->oracle普通用户(默认演示用户)
+		emp--->员工信息表	
+		
+	第三组 字符串连接
+		concat(str1,str2) 连接两个字符串
+		练习：
+			将姓名的小写和工作职位连接 as 职位信息
+			select concat(lower(ename),job) as 职位信息 from scott.emp;
+		多个连接 ||--->n个
+		案例：
+			数据表中每一行的数据整合为一段描述
+		语法案例：
+			select 字段1||字段2||'可以拼接字符串'||字段n from 表
+	强调：
+		内置函数只是改变显示样式
+	第四组 过滤和补足
+		trim(str)--->过滤字符串两边的空格
+		ltrim(str)--->左边过滤
+		rtrim(str)--->右边过滤
+		补足：
+			lpad
+			rpad
+		语法：
+			lpad/rpad(a,b,c)
+			a--->需要补足的字符串
+			b--->字符串长度
+			c--->若想补足至b的长度，补足什么字符(char)
+	第五组 截取与定位
+		substr();在原字符串中截取指定字符串
+		语法：
+			substr(s,begin_index,n)
+			s--->原字符串
+			begin_index--->开始截取的位置，索引从1开始
+			n--->截取长度
+		练习： 
+			hello world jsd1707
+			select substr('hello world jsd1707',7,5) from dual;
+			
+		instr();定位查找
+		语法：
+			instr(s,ss,begin,n)
+			s--->原字符串
+			ss--->需要找的字符串
+			begin--->从哪里开始找，索引从1开始
+			n--->寻找出现第几次的出现的地方
+2.6.2 数学和数字的函数
+	第一组 进位和截取
+		round(); 进位，四舍五入
+		语法：
+			round(n,s);
+			n--->进位的数字
+			s--->需要保留的小数位数
+			round(n)--->无小数位，四舍五入后取整
+		trunc(); 直接截取
+		语法：
+			trunc(s,c);
+			s--->数字
+			c--->保留的小数位
+	第二组 取模和取整
+		mod();--->取模
+		语法：
+			mod(num1,num2);
+		floor();
+		ceil();--->取整+-1	
+		语法：
+			floor(n)--->取整，-
+			ceil(n)--->取整，+
+2.6.3 日期类函数
+	extract();解析并获取特定内容的日期或时间的数据
+	语法：
+		extract(特定的内容关键字 from sysdate/自定义日期/systimestamp/自定义时间)
+		特定关键字：
+			year  month day hour minute second
+		案例：
+			当前的年份	
+			获取具体时间 时分秒
+	--当前Oracle系统的时区转换为安装oracle电脑时区
+	cast(systimestamp as timestamp);
+		
+2.7 oracle基本数据类型转换
+	oracle允许将值从一个基本类型转换为零一个基本类型
+	varchar2      number    
+	varchar2      date/timestamp
+2.7.1 字符串和日期、时间的互相转换
+	--->自定义时间和日期
+		to_char()-->把日期/时间类型转换成一定格式的字符串
+		语法：
+			to_char(date/timestamp,format);
+			date/timestamp--->要转换的日期时间类型
+			format--->具体格式的字符串
+				具体的格式如下：
+					yyyy:四位数的年  year 全拼的年
+					mm:两位数的月   
+					month：全拼的月March  
+					mon：简写的月Feb
+					dd:两位数字的天 
+					day：全拼的星期几 Monday  
+					dy：简写的星期Sun
+					hh:小时数    hh24    24小时制
+					am,pm:  上午，下午
+					mi: 分钟
+					ss:秒
+					ff:毫秒
+		案例：
+			systimestamp--->2017-09-19 17：00:00												
+		to_date();字符串转换成自定义日期
+		to_timestamp();字符串转成自定义时间
+		语法：
+			to_date()/to_timestamp(字符串,format);
+		案例练习：
+			自定义生日日期  1995  10 01
+			select to_date('1995-10-1','yyyy-mm-dd') from dual;	
+		综合练习	：
+			王力宏  750000.23  1988-6-3   2016-8-29 10:38:21
+			吴彦祖  750000.23  1988-6-3   2016-8-29 10:38:21
+2.7.2 字符串和数字的相互转换	
+	1)to_number(); 将数字的文字形态转换成数字形态
+		select to_number('80') +to_number('20') from dual;
+		select '80'+'20' from dual;
+	2)to_char()	  按照一定的字符串格式显示数字
+		语法：
+			to_char(number,format)
+		数字的format的格式如下：
+			9--->代表数字
+			.--->小数位
+			,--->千位符
+			$--->美金符号
+			L--->Oracle数据库安装所在地的货币符号
+		案例：
+			将数字260235750000.35---> $260,235,750,000.35
+			select to_char(260235750000.35,'$999,999,999,999.99') from dual;
+		注意：
+			小数位缺少空间则进位，整数不支持则#
+2.8 oracle运算逻辑符号
+	第一组 符号类  
+		比较类符号:= !=  <> >= <= 
+		算术类符号: +-*/%
+		优先级符号:()
+		oracle允许数字型字段进行符号运算
+		update sun_emp set sal=sal+10000 where sal<5000;
+	补充：复制表
+		create table sun_emp as select * from SCOTT.emp;
+	注意：
+		oracle中关键字大小写不敏感，数据是敏感的
+		update sun_emp set sal=(sal+2000)*2 where job=upper('salesman');
+		
+	第二组  范围 between and
+		语法：
+			(where) 字段名 (not) between A and B;
+			表示该字段值需要(不)在A和B的范围内，含AB本身
+			月薪在20000-90000之间的加薪10000
+				update sun_emp set sal=sal+10000 where sal between 20000 and 90000;
+			月薪不在2000-3000之间的加薪10000
+				(where) 字段名 not between A and B;
+	第三组 is null 或is not null
+		在Oracle，如果没有插入某个字段的值，系统会自动赋空值，null
+		备注：
+			空值和任何类型运算结果均是null
+		语法：
+			(where) 字段  is(not) null
+				检索出该字段(不)为空值的记录
+		注意：
+			null和任何已知类型的数据运算，值均为null
+			null连接值，null会消失
+	第四组 模糊查询 like
+		like会与通配符%使用
+			%--->代表0~N个任意字符
+		模糊查询语法：
+			字段名 (not) like '%值'
+				%abc--->以abc结尾    左模糊
+				abc%--->以abc开头    右模糊
+				%abc%--->含有abc       左右模糊
+			
+	第五组 (not) in (不)在列表项中的范围
+		between A and B 数字值的范围	
+		语法：
+			(where) 字段 not in (项目1，项目2，项目3，....)
+		练习：
+			查找职位不是salesman，manager，analyst
+			查找81，82，17年入职的员工信息	
+	第六组 逻辑 and or
+		构成多个条件的sql语句
+		and--->并列多个条件表达式，条件需要全部满足
+		 		条件A and 条件B and 条件C
+		or--->关联多个条件表达式，条件满足其中一个即可	
+				条件A or 条件B or 条件C
+		语法：
+			where 条件1 and/or 条件n...
+			优先级：and>or 
+					
+第三章 Oracle表空间、表、用户
+3.1 oracle数据库结构
+	--->存放数据表和数据的逻辑设计
+		数据库服务器--->数据库实例--->数据表空间--->(数据表--->数据)
+	数据库服务器：安装在PC的Oracle软件，是Oracle数据库的操作平台，数据库基站服务器
+	数据库实例：针对不同的WEB应用或者项目的数据库应用实例
+	表空间：每一个数据库应用(实例)根据类别不同功能不同将该数据库应用旗下的数据表分类
+			并存放在不同的区域，每一个区域称为表空间。一个数据库表只能属于一个表空间
+	数据表：存放数据的最小单位，字段列表示信息种类，数据行表示一条记录信息
+
+	注意：
+		用户：用户和表空间绑定，拥有该表空间中的表的所有权
+3.2 Oracle用户
+	一个Oracle有三级用户
+	SYS:超级管理员，唯一拥有最高权限，企业的董事长
+	SYSTEM：管理员，企业的高管
+	SCOTT：普通用户，普通员工
+	
+	用户管理：
+		创建用户：
+			create user 用户名 identified by 密码;
+		更改密码：
+			alter user 用户名  identified by 新密码;
+		激活用户:
+			alter user 用户名 account unlock;
+		删除用户：
+			drop user 用户名;
+3.3 用户权限
+	在Oracle里面有3个标准的用户权限
+	1)connect
+		授予用户可以连接数据库的权限
+	2)resource
+		能够在用户绑定的表空间创建表和数据的基本操作
+	3)dba(可以赋值多个DBA权限)系统管理员
+		dba--->可以访问全部的数据库实例
+3.4 数据表权限
+	Oracle把对表的控制权限细分如下：
+		all:全部的权限
+		select:只能查询
+		update:只能更新
+		delete:只能删除
+		insert:只能增加
+		alter:只能修改表结构
+
+第四章 Oracle权限管理与数据备份，同步更新
+4.1 用户管理
+	1)dba,resource,connect
+		重要权限需要用户退出后重新登录进行加载
+	注意：
+		自定义开发定时任务，让权限变动的用户在一定时间内强制退出，需要自定义开发
+	2)表权限属于轻量级权限，不需要重新登录加载相应权限
+4.2 用户权限授权管理与回收
+	1)授权权限grant
+		语法：
+			grant 权限1,权限2,... to 用户名;
+	2)收回权限revoke
+		语法：
+			revoke 权限1,权限2,... from 用户名;
+4.3 表权限授权管理与回收
+	1)授权表权限
+		语法：
+			grant 权限1,权限2,... on 表名 to 用户名;
+	2)收回表权限revoke
+		语法：
+			revoke 权限1,权限2,...on 表名 from 用户名;			
+	备注：
+		表权限除了create，drop这2个权限属于拥有者，其他权限可以分享select，delete，insert，update，alter(只能改表结构)
+
+4.4 数据备份
+	实际应用中重要的表往往需要备份，以防数据丢失，如vip客户信息表
+	语法：
+		create table 副表(备份表) as select *from 主表(被复制的表)
+	注意：
+		1、全字段全数据复制，但是约束不复制
+		2、副表的名称不存在
+	数据内部备份：备份内容--> as+查询结果集
+	案例：
+		显示数据备份  工资，新的部门编号，显示日期内容
+		create table sun_abc as 
+			select ename as 新编制员工姓名，
+				  empno||deptno as 新部门编号 ..from sun_emp;
+
+4.5 数据同步
+	数据表备份以后，形成主表和副表，如果主表的数据是不固定的，且更新的很快，
+	每天都会有大量的新数据，而又希望副表可以和主表数据同步，而不在另外创建更多的新表
+	
+	数据的同步更新：
+		1、删除副表的全部数据
+			delete from 副表
+		2、同步更新主表的信息
+			insert into 副表 select * from 主表
+
+
+第五章 Oracle高级应用(重点*****)
+5.1 排序查询 order by
+	按照某个字段进行排序，升序asc(默认值)，降序desc
+	语法：
+		(where) order by 字段名 (asc/desc)
+	练习：
+		字符串排序：
+			查找员工信息，按照员工姓名升序
+			查找员工信息，按照入职时间降序排序，只统计81,82年入职的，或者是5月入职的
+5.2 统计函数(聚合函数)
+	count()--->统计字段记录数
+	语法：
+		count(*)--->统计表的行数，null也计算
+		--------------------------
+		count(字段名)--->统计有效的字段记录数，不统计null
+		min(字段名)--->统计某个字段的最小值
+		max(字段名)--->统计某个字段的最大值
+		avg()--->平均值
+		sum()--->求和
+		统计函数：是对数据表进行分组统计的高级函数，若没有分组声明，则视为整个表为一个大组
+	案例：
+		--统计应发工资总数
+		select sum(sal) as 工资总额 from scott.emp;
+	count(*) 与count(字段)区别：
+	
+	综合练习：
+		统计员工薪水加倍后的平均工资，小数位保留2位
+		其中员工编号包含9的不统计，且职位不能salemans
+		或者是president，或者姓名含有L的也不统计	
+	
+5.3 分组查询
+	定义：
+		基于某个字段把表分成若干小组，从而进行小组的统计分析
+	语法：
+		(where) group by 字段名
+		--->按照这个字段进行全表数据的分组
+	案例：
+		1、基于部门分组分析，想知道每个部门最高最低工资，以及平均工资
+		2、基于部门分组分析，想知道每个部门最高工资，以及工资总和，且不统计20部门，按照工资总和降序排序
+	综合练习：
+		统计每个月入职的员工工资总和和最高工资，货币显示格式
+		入职的月份，按照工资总和升序排序
+		其中工资大于35000的员工不参与统计，
+		或者员工编号含有3或者姓名含有L的不统计，
+		或者87年，82年的也不统计，除非他是5月份入职的 
+5.4 表结构修改
+5.4.1 增加字段
+	语法：
+		alter table 表名 add 新字段名 字段类型
+	案例：
+		部门表副表sun_f 添加一个字段
+		部门级别deptLevel number(3,0)
+		
+5.4.2 修改字段
+	a、修改字段类型
+	语法：
+		alter table 表名 modify 字段名 字段类型
+	备注：
+		修改类型--->修改值域范围
+			   --->修改类型，要确保修改后元数据兼容
+	b、修改字段名
+	语法：
+		alter table 表名 rename column 字段名 to 新字段名
+5.4.3 删除字段
+	alter table 表名 drop column 表字段;
+5.5 表别名和字段别名
+	1)字段别名--->方便调用
+		a、空格
+		b、as
+	2)表别名
+		表别名方便调出表中字段，尤其适合在多表查询
+		声明语法：
+			from 表名 表别名
+		调用语法：
+			select 表别名.字段1,...where 表别名.字段1,...
+		备注：
+			别名声明后，在单表中，可以使用或不使用，但是在多表中，如果出现重名的字段必须要使用
+				A name <--->B name
+		案例：
+			查询工资不在1000-2000范围的且不能超过50000，员工信息，按照工资的降序排序
+5.6 默认值default
+	声明字段的默认值，可以使用关键字default在出入数据时启用
+	声明语法：
+		字段名 字段类型 default 值
+		使用语法：
+			insert into ...values(default)
+		修改字段默认值：
+			
+		案例：
+			创建学习表
+5.7 空值约束(是否必填项)
+	空值约束是限定某些字段为必填项，和前段页面交互呼应
+	在Oracle当中默认都是可以为空的字段，没有值会自动赋null，除非有default默认值，
+	因此要限定某个字段为必填项则必须在该字段上声明空值约束
+	声明方式：
+		a、创建表时使用
+			语法：
+				创建SQL：字段 not null
+			备注顺序：
+				字段  字段类型 default 值  not null
+			结论：
+				没有默认值--->必须填写值
+				有默认值--->null控制插入依然报错，不写或写default
+		b、修改字段空值约束
+			单一空值：
+				alter table sun_stu01 modify stuname varchar2(2000) not null;
+			有默认值：
+				alter table sun_stu01 modify stuname varchar2(2000) default '美国队长' not null;
+			备注：	
+				修改的内容声明才会修改，没有声明的不变
+				改回可选填字段      not null--->null
+					alter table sun_stu01 modify stuname varchar2(320) null; 
+5.8 主键约束，外键约束
+	主键定义：
+		表中唯一标识一行记录的重要字段
+	主键约束：
+		在适合做主键的字段上声明该表的主键，该字段就会唯一标识数据，对数据产生约束作用
+	主键字段：
+		a、唯一标识一行记录，
+		b、字段值不能为null，且不能重复
+	如何设置主键：
+		1)创建表时同步设置
+			语法：创建表的SQL语句最后一行
+			constraint 主键自定义名称  primary key(选中的字段)
+		2)创建表后命令追加
+			a、添加主键
+				语法：
+					alter table 表名 add constraint 主键名称 primary key(选中字段名);
+				案例：
+					alter table sun_stu03 add constraint mypk_03 primary key(stuno);	
+			b、删除主键
+				语法：
+					alter table 表名 drop constraint 主键名
+				案例：
+					alter table sun_stu03 drop constraint mypk_03;
+			建议主键方式：
+				create table sun_stu03(
+  					stuno number(8) primary key,
+  					stuname varchar2(30) default '钢铁侠',
+  					stuphone number(15) default 1383838438 not null,
+  					stubirth date default sysdate,
+  					stureg timestamp default systimestamp
+				);
+	外键约束：
+		A表主键字段abc在B表中出现(作为普通字段)
+			A abc--->主键
+			B abc--->关联A表外键
+		现今主流做法：
+			物理外键-->逻辑外键
+			生成外键-->思考的外键
+		案例：
+			scott  emp员工表    dept部门表
+				dept--->deptno  主键
+				emp--->deptno 外键，关联dept表信息
+5.9 单表高级查询(having,子查询)
+5.9.1 高级查询的6大关键字
+	select--->将符合条件的信息展示出来
+	from--->数据源(数据字典，数据表，另一个查询结果)
+	where--->筛选条件组
+	group by--->分组
+	having--->和group by绑定关系，进行二次筛选条件(分组前和分组后)
+	order by--->排序
+	
+	where--->过滤出需要显示/使用的数据
+	group by--->在使用的数据进行分组统计
+	having--->将分组后显示/使用的数据再次过滤
+	语法：
+		having<--->where用法一致
+	
+	案例：
+		查询每个部门的最低工资和平均工资
+5.9.2 6大关键字的书写顺序
+	select-->from-->where(普通表达式)
+	-->group by-->having(聚合函数)-->order by
+	
+	案例：
+5.9.3 子查询
+	有的时候一个SQL无法满足全部的查询要求，需要多个查询嵌套，即主查询的过滤条件依赖于其他查询的结果，解决方案就是子查询
+	范围：
+		嵌套在主查询中
+	语法：
+		主查询条件=子查询结果集 [使用频率高]
+		查询结果集 from 子查询   [分页使用]  子查询使用()包含
+	案例：
+		1、查询不和jones一个部门的员工信息
+		2、查询不和jones，martin一个部门的员工信息
+
+5.10 双表查询及多表查询
+5.10.1 双表查询
+	双表结合查询，其中一张表为主表，另外一张表为参考查询表，可互换位置。
+	双表查询需要明确关联的关系，即主表的普通字段(外键)对应着参考表的主键
+5.10.2 双表关联查询语法：
+	select 表别名1.字段1,表别名1.字段2,...,表别名2.字段1,...
+			from 表名1  表别名1,表名2 表别名2
+			where 关联表达式(表别名1.普通字段=表别名2.主键)
+	注意：
+		关联表达式和其他条件的关系是and
+		关联表达式 and 其他(a or b and c...)
+	案例：
+		1、查询全体员工的岗位信息和部门信息
+		2、查询jones的工作岗位，收入，部门名称，工作地点
+5.10.3 多表查询
+	创建3个表 1学生表  2 班级表  3 亲属表
+	多表查询：
+		主表需要有相应的普通字段(外键字段)对应着每一个参考表的主键，只有这样才可以关联起来
+	多表--->
+		from 增加多表
+		where 增加 主表和增加参考表的关联表达式
+	注意：
+		where 关联表达式组 and 其他条件
+周末：
+	创建5个表
+		1、学生表 2、班级表 3、亲属 4、教师 5、学校
+5.11 复合查询(集合查询，连接查询)
+	复合查询-->各种组合的查询，含统计、多表查询、多查询结果集查询、表数据挖掘、和多表提炼数据
+5.11.1 集合查询
+	从多个查询结果集当中提炼数据，挖掘数据的价值
+	4种方式：
+		union、union all、intersect、minus
+	5种使用场景：
+		
+	intersect：合并多个查询结果集，只获取相同的部分
+	union:合并多个查询结果集，去掉重复的部分
+	minus:合并多个查询结果集,获取2个结果集不同的部分
+		备注：
+			minus左边的查询为主查询A-B
+	union all：合并多个查询结果集,全部的信息，包含重复的内容
+	集合查询语法：
+		select...查询语句A  集合查询关键字   
+				select...查询语句B 集合查询关键字
+				...
+				select...查询语句N;
+	集合查询可以横向扩展分析，增加分析的字段--->多个字段数据挖掘
+	也可以纵向分析增加分析的查询结果集--->多个查询的数据挖掘
+	
+	备注：
+		多个字段数据挖掘
+			挖掘的字段的顺序和类型需要一致
+	案例：
+		收入大于2000的信息，和收入大于3000的员工信息，重复出现的员工姓名和工资
+	create table sun_price(
+  		priceNo number(6) primary key,
+  		--获奖编号
+  		priceName varchar2(100) not null,
+  		--获奖人姓名
+  		priceYear number(15) not null
+  		--获奖年度
+	);
+
+
+	案例1：
+		2017 2016获奖人不重复
+			select priceName from sun_price where priceyear=2016
+  				intersect select pricename from sun_price where priceyear=2017;
+  		有多少人在2016 2017获奖名单
+  	
+  		查询2016获奖的，2017落选了
+  	
+  		2016没有获奖，却在2017年获奖
+  	
+  		2016和2017获奖全员，包含重复的部分
+ 		增加2018年获奖3人    
+ 		1 2016   
+ 		1 2017  
+ 		1 2016 2017
+ 		1)查询连续3年都获奖的人
+5.11.2 连接查询
+	定义：
+		两个表或以上表的关联查询
+	分类：
+		内连接，外连接
+	1)内连接：只返回多表查询中满足查询条件的信息
+		关键字：
+			inner join /join
+		内连接==多表关联
+		案例：
+			查询所有员工的信息和部门地点所在地
+			
+			多表关联写法：
+				select t1.*,t2.loc from sun_emp t1,sun_dept t2 where t1.deptno=t2.deptno;
+			内连接写法：
+				select t1.*,t2.loc from sun_emp t1 join sun_dept t2 on t1.deptno=t2.deptno;
+		备注：
+			只能查询出符合关联条件的和符合查询条件的信息	
+	2)外连接：可以返回部分不符合SQL查询条件的信息
+		小分类：
+			左连接 left outer join/left join
+			右连接 right outer join/right join
+			全连接 full outer join/full join
+		外连接最大特点：
+			对于不满足条件的部分记录精确显示
+		left join：	
+			表1 left join 表2--->保留表1(左边表)的不满足条件的记录
+		right join：
+			表1 right join 表2--->保留表2(右边表)的不满足条件的记录
+  		full join:
+  			表1 full join 表2--->保留2个表都不满足条件的记录
+  	案例： 创建学生表、宿舍表
+  	
+  	案例1：统计目前所有学员的住宿情况，
+  			若已经被分配了房间则显示相应信息
+  			若没有分配则列出未被分配宿舍的学生名单
+  	案例2：
+  		发现有的学生没有安排宿舍，立刻查询资源表整合情况，哪个宿舍依然可以使用
+  	案例3：
+  		一次查看所有的信息，没有安排住宿的学生以及没有学生入住的宿舍
+5.12 oracle伪列
+	定义：
+		在Oracle使用rownum获取前N条记录，rownum被称为伪列，在Oracle数据库创建表时，
+		系统会自动增加一个隐藏列作为记录行信息的序列号
+	语法：
+		rownum<=当前查询的总记录数
+		(where) rownum<=n
+	使用语法：
+		select *from (真正的查询) where rownum<n;
+	案例：
+		1、查询收入前三名的员工姓名
+		2、查询收入前5名的员工姓名，且收入超过或等于3000的不统计
+		3、获取收入最低的员工姓名、收入及工作地点
+5.13 序列
+	定义：
+		序列是一种用来自动生成主键序列号的Oracle对象，通常用来绑定主键自定生成主键序列号值
+	sequence
+	语法：
+		create sequence 自定义名称
+	选项属性：
+		start with 起始值--->默认是1
+		increment by 递增值--->默认是1
+		maxvalue 序列的上限值--->默认无穷大
+		minvalue 序列的下限值--->默认起始值 or 1
+		循环选项  nocycle 不循环     cycle 循环
+		缓存选项 nocache 无缓存(建议使用，不加载内存中，可以不占用Oracle连接内存资源，减轻数据库负荷)
+	创建后使用语法：
+		序列自定义名称.nextval   返回序列下一个值
+		序列自定义名称.currval   返回序列当前值
+		第一次使用序列时需要先调用nextval
+		序列取值器指针初始状态在第一个值的预备位置
+	案例：
+		创建一个标准序列 seq01
+			create sequence seq01;
+	功能：
+		作为自动生成主键的工具和计数器
+		一个序列对象1:1绑定一个表的主键
+		
+5.14 索引 index
+	定义：
+		索引对象用来加速Oracle表中查询速度和效率，就像对一个表中某个字段建立目录，快速定位记录
+	语法：创建索引
+		create index 自定义名称 on 表名(目录字段)
+	案例：
+		1、查询工资收入大于1000的员工信息
+			创建索引前：
+			select *from sun_emp where sal>1000;
+			创建索引：
+			create index abc on sun_emp(sal);
+	备注：
+		建立索引--->加快查询速度
+	
+5.15 视图view
+	定义：
+		单表或者多表的查询结果集，一张虚拟的表
+	作用：
+		1、可以封装一个复杂的且使用高频的SQL查询，开发人员不需要每次运行SQL语句，
+			而是简单的使用select *from 视图即可
+		2、可以屏蔽一些敏感的重要信息，如工资等
+	特性：
+		1、视图和表操作一样，可以使用DML、DDL
+		2、视图可以随元数据表的数据变化而变化
+	案例：
+		查询所有员工的信息和办公地点，除了工资
+		select t1.ename,t1.job,t1.hiredate,t2.dname,t2.loc 
+		from sun_emp t1 join sun_dept t2 on t1.deptno=t2.deptno;
+第六章 Oracle PL/SQL编程
+6.1 PL/SQL简介
+	procedual language SQL--->oracle扩展SQL语言
+	
+	PL/SQL,弥补了SQL单语句执行的最大缺陷
+	
+	PL/SQL是一种块结构语言，一个PL/SQL可以包含多个SQL用户局，形成一个商业逻辑，通过控制语句块决定执行逻辑。
+		--->SQL +控制块
+		(for,while,switch,if)
+6.2 PL/SQL语法
+	declare 						java
+		生明变量区域					声明属性区域
+	begin							main{
+		主体内容(SQL+控制块)				java语句块;
+	end								}
+6.3 PL/SQL基础编程
+6.3.1 符号
+	1)基本符号+-*/ > < >= <= != <> and or %
+	2)特殊符号
+		赋值   :=              java,sql,js中复制用=
+		范围    ..
+			如：    1..5      1,2,3,4,5值域范围
+6.3.2 变量声明
+	a、声明不赋值		变量名  变量类型
+	b、声明且赋值		变量名  变量类型:=值;
+		stuNo number(6):=10001;
+6.3.3 动态赋值
+	定义：
+		PL/SQL结合SQL查询，将某个字段的查询结果赋值给PL/SQL声明的变量
+	案例：
+		查询马丁的工资
+		sun_salary number(8,2):=0;
+	语法：
+		(select) 字段1 into 变量
+		select sal into sun_salary from sun_emp where ename='MARTIN';
+6.4 PL/SQL打印输出命令
+	set serveroutput on;--->打开PL/SQL语句块控制台输出
+	
+	dbms_output.put_line(字符串);--->打印字符串内容
+	同document.write();/System.out.println();
+	
+	案例：
+		打印plsql  hello world
+			set serveroutput on;
+			declare
+				hello varchar2(100)
+				begin
+					hello:='plsql hello 史蒂夫';
+					dbms_output.put_line(hello);
+					dbms_output.put_line('第一个案例打印结束');
+				end;
+		
+		打印KING的工资
+			set serveroutput on;   
+			declare
+  				emp_name varchar2(100);
+  				emp_sal number(8,2):=0;
+  				begin
+    				select ename into emp_name,sal into emp_sal from
+    				(select ename,sal from sun_emp order by sal desc) where rownum<=1;
+    				dbms_output.put_line('工资最高者：'||emp_name);
+    				dbms_output.put_line('工资为'||emp_sal);
+  				end;
+	备注：
+		在PL/SQL，Oracle的函数正常使用
+	注意：
+		动态赋值
+		连续写法：
+			(select) 字段1,字段2...into 变量1,变量2
+			set serveroutput on;   
+			declare
+  				emp_name varchar2(100);
+  				emp_sal number(8,2):=0;
+  				begin
+    				select ename,sal into emp_name,emp_sal from (select ename,sal from sun_emp order by sal desc) where rownum<=1;
+    				dbms_output.put_line('工资最高者：'||emp_name);
+    				dbms_output.put_line('工资为'||to_char(emp_sal,'L999,999,99.99'));
+  				end;
+6.5 PL/SQL控制语句块
+	1)选择控制
+		a、if else
+			条件表达式  then 语句;
+		   end if;
+			
+		   if 条件表达式 then 语句;
+		   else 语句;
+		   end if;
+		   
+		   if 条件表达式 then 语句;
+		   else if 表达式 then 语句;
+		   ...
+		   end if;
+		
+		b、switch 分支超过5(含)个使用
+			case
+				when 表达式   then 语句;
+				...
+				when 表达式   then 语句;
+			end case;
+	案例：
+		根据查询工资的数额，进行分类分析
+		低于1000  屌丝
+		1000-3000 中产
+		5000   土豪
+		set serveroutput on;
+		declare 
+  			salary number(8,2):=0;
+  			info varchar2(100);
+  			begin
+    			select sal into salary from sun_emp where ename='SCOTT';
+    		case
+      			when salary<1000 then info:='屌丝';
+      			when salary<=3000 then info:='中产';
+      			when salary<=5000 then info:='土豪';
+    		end case;
+    		dbms_output.put_line('该员工收入为：'||salary);
+    		dbms_output.put_line('该员工属于：'||info);
+  		end;
+
+	总结：
+		2个条件表达式不可使用关键字符号&& ||
+		&&表示输入参数   ||表示连接字符串
+		若要使用2个条件关联则使用关键字 and or
+
+	2)循环控制for
+		语法：
+			i number(6):=1;
+			for i in 1..10 loop
+				循环体内语句；
+			end loop;
+			
+	set serveroutput on;
+	declare
+		--变量声明区 类属性声明区
+		counter number(6):=1;
+		location varchar2(100);
+		begin
+			--内容区    主函数体内
+			select loc into location from sun_dept where deptno=10;
+			for counter in 1..20 loop
+				--循环体内
+				dbms_output.put_line(location);
+			end loop;
+		end;
+
+
+
+===============================Oracle END=========================================
