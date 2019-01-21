@@ -1,0 +1,91 @@
+java中异常处理机制
+	java中异常结构定义的父类为Throwable，其派生的两个子类：
+		Error：用于表示JRE的错误，该类错误是无法通过程序解决
+			OutOfMemoryError：堆内存溢出
+			StackOverflowError：栈内存溢出
+		Exception：表示程序级别的异常，该类错误是可以通过程序解决的
+		
+		注意：
+			1、异常是行为、方法、过程的意外结果
+			2、一个方法如果抛出了异常，这个方法就必须声明异常的抛出
+			3、异常的声明：在方法上声明方法的意外结果
+			4、异常类一般都继承于Exception
+			5、调用抛出异常的方法，必须处理异常，有两种方案：
+				a、try-catch-finally捕获异常
+				b、直接抛出异常
+			6、如果出现异常，异常以后的代码不会再执行，除了finally里面的代码
+			
+java异常捕获机制的语法：
+	try-catch语句
+		try{
+			//可能出现异常的代码片段
+		}catch(XXXException e){
+			//解决问题的代码片段(catch块跟在try语句之后，用于捕获并解决异常，catch块允许出现多次)
+		}finally{
+			//不管怎么样都会执行的代码片段
+		}
+		
+		
+		
+		
+java  IO流(Input    Output)
+	1、File类
+		1.1、java.io.File类用于文件(目录)，该类的实例时用描述文件系统的一个文件或目录的，
+			程序员通过File类在程序中操作硬盘上的文件和目录
+			注意：
+				File类只能用于表达文件的信息(名称、大小等)，不能对文件内容进行访问
+		1.2、File类的基本API
+			File文件表示文件系统对文件、目录的管理操作(增删改查)
+			常见API：
+			File(String)     		指定文件名的构造器
+			long length()     		文件的长度
+			long lastModified()   	最后一次修改的时间
+			String getName()		获取文件名
+			String getPath()   		获取相对路径
+			exists() 				文件是否存在
+			dir.isFile()			是否为一个文件
+			dir.isDirectory()		是否为一个目录
+			mkdir()					创建一个目录
+			file.createNewFile()	创建File对象所描述的文件		
+		
+		 
+		
+1、递归删除	
+2、递归列出目录的内容	listFile()	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

@@ -1,0 +1,72 @@
+Java IO流
+	java中的流根据功能划分为：输入流和输出流
+	输入流：用于读取数据
+	输出流：用于写入数据
+	输入输出参照对象是基于我们的程序
+	
+	流根据处理单位划分为：字节流和字符流
+	字节流：以字节为单位读写数据
+	字符流：以字符为单位读写数据
+	
+	流还分为：高级流和低级流
+	高级流：不能独立存在，必须基于另一个流工作
+	低级流：数据有明确的来源或者去向
+	
+字节的输入输出流的父类：
+	InputStream：字节的输入流
+	OutputStream：字节的输出流
+	以上两个流都是抽象类，不能直接实例化
+	
+	
+	FIS和FOS：用于读写文件的流
+	FileInputStream：文件字节输入流
+	FileOutputStream：文件字节输出流
+		构造器：
+		write()
+		read()
+	
+	
+	BIS和BOS：这两个流是高级流
+	BufferedInputStream：缓存字节输入流
+	BufferedOutputStream：缓存字节输出流
+	高级流：高级流会带来一些额外的功能，通常用于简化我们的读写操作
+	
+	DIS和DOS：这两个流也是高级流
+	DataInputStream：可以方便的读取基本类型数据
+	DataOutputStream：可以方便的写入基本类型数据
+	
+	
+字符流：Reader和Writer
+	Reader：所有字符输入流的父类
+	Writer：所有字符输出流的父类
+	
+	字符流处理单位为字符，一次处理一个字符，unicode字符集
+	字符流本质上还是用的读写字节
+	
+可以直接读写[文本文件]的字符流
+	FileWriter:
+	FileReader:
+	
+	ISR和OSW
+	InputStreamReader：字符输入流
+	OutputStreamWriter：字符输出流
+	
+	
+	BR和BW
+	BufferedReader：缓冲字符输入流
+	BufferedWriter：缓冲字符输出流
+	
+	
+
+	
+带自动行刷新的缓冲字符输出流  PrintWriter
+	构造方法：
+	PrintWriter(File file)	
+	PrintWriter(String fileName)	
+	PrintWriter(OutputStream out)	
+	PrintWriter(Writer writer)	
+	
+	
+	
+	
+	
