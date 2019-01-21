@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<something-else-entirely>
+	<proxool>
+		<alias>pro_pool</alias>
+		<driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+		<!-- 测试库  117.135.135.126 ,10.38.67.72,192.168.1.254,218.206.128.170 jdbc:oracle:thin:user/password@117.135.135.127:1521:orcl-->
+		<driver-url>
+			jdbc:oracle:thin:user/password@192.168.1.200:1521:orcl
+		</driver-url>
+		<driver-properties>
+			<property name="user" value="smeimp" />
+			<property name="password" value="superb2017" />
+		</driver-properties>
+		<minimum-connection-count>10</minimum-connection-count>
+		<maximum-connection-count>200</maximum-connection-count>
+		<simultaneous-build-throttle>10</simultaneous-build-throttle>
+		<house-keeping-sleep-time>30000</house-keeping-sleep-time>
+		<prototype-count>3</prototype-count>
+		<house-keeping-test-sql> select CURRENT_DATE from dual</house-keeping-test-sql>
+	</proxool>
+</something-else-entirely> 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+ <!--  <servlet>
+    <servlet-name>ServletConfigurator</servlet-name>
+    <servlet-class>
+			org.logicalcobwebs.proxool.configuration.ServletConfigurator
+		</servlet-class>
+    <init-param>
+      <param-name>xmlFile</param-name>
+      <param-value>WEB-INF/classes/proxool-conf.xml</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet> -->
+  <!-- <servlet>
+    <servlet-name>Proxool</servlet-name>
+    <servlet-class>
+			org.logicalcobwebs.proxool.admin.servlet.AdminServlet
+		</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+   -->
+  
+<!--   <servlet>
+    <servlet-name>AttdcjDataCollectServlet</servlet-name>
+    <servlet-class>com.superb.servlet.AttdcjDataCollectServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AttdcjDataCollectServlet</servlet-name>
+    <url-pattern>/AttdcjDataCollectServlet</url-pattern>
+  </servlet-mapping>
+  
+     <servlet>
+    <servlet-name>AttdcZhongKongServlet</servlet-name>
+    <servlet-class>com.superb.servlet.AttdcZhongKongServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AttdcZhongKongServlet</servlet-name>
+    <url-pattern>/AttdcZhongKongServlet</url-pattern>
+  </servlet-mapping> -->
+
+   <!-- configuration of frame work core listener -->
+  <listener>
+    <listener-class>com.superb.timer.FlowCountListner</listener-class>
+  </listener>
+
+
+</web-app>
