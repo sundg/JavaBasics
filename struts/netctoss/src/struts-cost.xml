@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<!-- 资费管理模块 -->
+	<package name="cost" namespace="/cost" extends="json-default">
+		
+		<!-- localhost:8080/netctoss/cost/feelist.action -->
+		<action name="feelist" class="action.FeeListAction">
+			<!--<interceptor-ref name="netctoss"></interceptor-ref>-->
+			<result>/WEB-INF/cost/fee_list.jsp</result>
+		</action>
+		<!-- 删除-->
+		<action name="del" class="action.fee.DelCostAction">
+			<result name="success" type="redirectAction">feelist</result>
+			<result name="fail" type="redirectAction">feelist</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		<!-- 启用资费 -->
+		<action name="start" class="action.fee.StartCostAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 暂停资费 -->
+		<action name="stop" class="action.fee.StopFeeAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 资费详细信息 -->
+		<action name="detail" class="action.fee.DetailCostAction">
+			<result>/WEB-INF/cost/detailCost.jsp</result>
+		</action>
+		<action name="back">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 修改 -->
+		<action name="modify" class="action.fee.ModifyCostAction">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<action name="update" class="action.fee.UpdateCostAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		<!-- 加载更新页面 -->
+		<action name="load" class="action.fee.UpdateLoadAction" method="load">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<!-- 更新页面 -->
+		<action name="updatecost" class="action.fee.UpdateLoadAction" method="update">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<action name="fee_add">
+			<result>/WEB-INF/cost/fee_add.jsp</result>
+		</action>
+		<!-- 添加资费 -->
+		<action name="addcost" class="action.fee.AddCostAction">
+			<result>/WEB-INF/cost/fee_add.jsp</result>
+			<result name="fail">/WEB-INF/cost/fee_add.jsp</result>
+		</action>
+		<action name="backcost">
+			<result type="redirectAction">feelist</result>
+		</action>
+		
+		
+		
+		
+		<action name="loadData" class="action.ajax.LoadCostAction" method="loadCost">
+			<result name="success" type="json">
+				<!-- 指定返回某一个值 -->
+				<param name="root">list</param>
+			</result>
+		</action>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</package>
+	
+</struts>

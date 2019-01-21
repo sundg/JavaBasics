@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sdg.dao.DeptMapper">
+	<!-- 
+	<insert id="addDept" parameterType="com.sdg.entity.Dept">
+		insert into dept values(null,#{dname},#{dloc})	
+	</insert>
+	 -->
+	<insert id="addDept" parameterType="com.sdg.entity.Dept"
+		useGeneratedKeys="true" keyProperty="deptno">
+		insert into dept values(null,#{dname},#{dloc})	
+	</insert>
+	
+	<insert id="addDept" parameterType="com.sdg.entity.Dept">
+		<selectKey keyProperty="">
+		
+		</selectKey>
+		insert into dept values(null,#{dname},#{dloc})	
+	</insert>
+	
+	
+</mapper>

@@ -1,0 +1,28 @@
+package tag;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+public class DateTag extends SimpleTagSupport {
+	private String pattern;
+	public String getPattern() {
+		return pattern;
+	}
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+	public void doTag() throws JspException, IOException {
+		PageContext pc=(PageContext) getJspContext();
+		JspWriter out=pc.getOut();
+		Date date=new Date();
+		SimpleDateFormat sdf=new SimpleDateFormat(pattern);
+		String now=sdf.format(date);
+		out.print(now);
+	}
+}

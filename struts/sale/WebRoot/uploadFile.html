@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="/sale/js/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="/sale/js/sun_course.js"></script>
+<title>Insert title here</title>
+<script type="text/javascript">
+	$(function(){
+		//给文件框绑定change事件
+		$("input[type='file']").change(function(){
+			//向服务器发请求，将文件保存到服务器中
+			//将文件类型的数据转成二进制类型
+			var form=new FormData();
+			form.append("file",this.files[0]);
+			$.ajax({
+				"url":"uploadFile",
+				"type":"post",
+				"data":form,
+				"dataType":"json",
+				"processData":false,//告诉jq不要将参数转成字符串
+				"contentType":false,
+				"cache":false,
+				"success":function(data){
+					console.log(data);
+				},
+				"error":function(){alert("系统繁忙")}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<form action="upload.do" enctype="multipart/form-data">
+		<select id="course">
+			
+		</select>
+		<select id="lore">
+			
+		</select>
+		<input type="file" name="file"/>
+		<input type="submit" value="上传"/>
+	</form>
+</body>
+</html>

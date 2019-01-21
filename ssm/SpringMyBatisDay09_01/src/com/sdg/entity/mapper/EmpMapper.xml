@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ 
+<mapper namespace="com.sdg.dao.EmpMapper">
+	<!-- 根据部门编号查询员工 -->
+	<select id="findByDeptno" parameterType="com.sdg.common.Condition" resultType="com.sdg.entity.Emp">
+		select * from emp
+		<if test="deptno !=null">
+			where deptno=#{deptno}
+		</if>
+	</select>
+	
+	<select id="findBySalary" parameterType="com.sdg.common.Condition" resultType="com.sdg.entity.Emp">
+		select * from emp
+		<choose>
+			<when test="salary>60000">
+				where salary>#{salary}
+			</when>
+			<!-- 
+				实体引用替换 &lt;
+			 -->
+			<otherwise>
+				where salary&lt;#{salary}
+			</otherwise>
+		</choose> 
+	</select>
+	
+	<!-- 根据部门号和薪水查询 -->
+	<select id="findByDeptnoAndSalary" parameterType="com.sdg.common.Condition"
+		resultType="com.sdg.entity.Emp">
+		select * from emp
+		<where>
+			<if test="deptno!=null">
+				and deptno=#{deptno} 
+			</if>
+			<if test="salary!=null">
+				and salary>#{salary}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateEmp" parameterType="com.sdg.entity.Emp">
+		update emp 
+		<set>
+			<if test="ename!=null">
+				ename=#{ename},
+			</if>
+			<if test="salary!=null">
+				salary=#{salary},
+			</if>
+			<if test="deptno!=null">
+				deptno=#{deptno},
+			</if>
+		</set>
+		where empno=#{empno}
+	</update>
+	
+	
+	<!-- 根据部门号和薪水查询 
+		trim替换where
+	-->
+	<select id="findByDeptnoAndSalaryTwo" parameterType="com.sdg.common.Condition"
+		resultType="com.sdg.entity.Emp">
+		select * from emp
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="deptno!=null">
+				and deptno=#{deptno} 
+			</if>
+			<if test="salary!=null">
+				and salary>#{salary}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- trim替换set -->
+	<update id="updateEmpTwo" parameterType="com.sdg.entity.Emp">
+		update emp 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="ename!=null">
+				ename=#{ename},
+			</if>
+			<if test="salary!=null">
+				salary=#{salary},
+			</if>
+			<if test="deptno!=null">
+				deptno=#{deptno},
+			</if>
+		</trim>
+		where empno=#{empno}
+	</update>
+	
+	
+	
+	<!-- 根据员工号查询foreach -->
+	<select id="findByEmpno" parameterType="com.sdg.common.Condition" resultType="com.sdg.entity.Emp">
+		select * from emp where empno in
+		<foreach collection="empnos" item="empno" open="(" close=")" separator=",">
+			#{empno}
+		</foreach>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

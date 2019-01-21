@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="tags" location="0,0" size="0,0">
+    <action name="tags" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="tagsDemo01.jsp" />
+      </result>
+    </action>
+    <action name="ui" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+  </package>
+  <webResource name="tagsDemo01.jsp" path="/WEB-INF/tagsDemo01.jsp" location="0,0" size="0,0" />
+</Struts2Diagram>
+

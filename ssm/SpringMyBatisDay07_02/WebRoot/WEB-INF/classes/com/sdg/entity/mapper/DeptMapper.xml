@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sdg.dao.DeptDAO">
+	<select id="findAll" resultMap="deptMap" >
+		select * from dept;
+	</select>
+	<resultMap type="com.sdg.entity.Dept" id="deptMap">
+		<!-- 主键属性与主键字段之间的关联 -->
+		<id property="id" column="deptno"/>
+		<!-- 非主键 -->
+		<result property="name" column="dname"/>
+	</resultMap>
+</mapper>

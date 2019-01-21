@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="netctoss_struts"
+  id="myeclipse.1510556722084"
+  context-root="/netctoss_struts"
+  j2ee-spec="5.0"
+  archive="netctoss_struts.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

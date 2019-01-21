@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="login" location="1961,220" size="525,455">
+    <action name="main" location="65,57" size="150,41">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="main.jsp" />
+      </result>
+    </action>
+    <action name="loginform" location="65,162" size="150,41">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="login.jsp" />
+      </result>
+    </action>
+    <action name="login" location="65,316" size="150,83">
+      <result name="success" />
+      <result name="fail" />
+      <result name="error">
+        <resourceEdge source="error" routing="0" target="error.jsp" />
+      </result>
+    </action>
+    <action name="valicode" location="310,337" size="150,41">
+      <result name="success" />
+    </action>
+    <action name="checkValicode" location="310,232" size="150,41">
+      <result name="success" />
+    </action>
+  </package>
+  <webResource name="fee_list.jsp" path="/WEB-INF/cost/fee_list.jsp" location="1524,170" size="150,55" />
+  <webResource name="error.jsp" path="/WEB-INF/error.jsp" location="2033,730" size="150,55" />
+  <webResource name="detailCost.jsp" path="/WEB-INF/cost/detailCost.jsp" location="9,870" size="150,55" />
+  <webResource name="modify.jsp" path="/WEB-INF/cost/modify.jsp" location="788,65" size="150,55" />
+  <webResource name="fee_add.jsp" path="/WEB-INF/cost/fee_add.jsp" location="540,170" size="150,55" />
+  <webResource name="main.jsp" path="/WEB-INF/main.jsp" location="1789,240" size="150,55" />
+  <webResource name="login.jsp" path="/WEB-INF/login/login.jsp" location="2541,345" size="150,55" />
+</Struts2Diagram>
+

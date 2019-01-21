@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<!-- 定义公共的包，给其他模块继承用，
+		只要继承了该包，则给其配置了登录拦截
+	 -->
+	 <package name="common" extends="json-default">
+	 	<!-- 定义拦截器 -->	
+	 	<interceptors>
+			<interceptor name="checklogin" class="com.sdg.interceptor.CheckLoginInterceptor"></interceptor>
+			<interceptor-stack name="netctoss">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="checklogin"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 默认拦截器引用 -->
+		<default-interceptor-ref name="netctoss"></default-interceptor-ref>
+		
+		<!-- 配置全局的result -->
+		<global-results>
+			<result name="login" type="redirectAction">
+				<!-- 指定包的路径 -->
+				<param name="namespace">/login</param>
+				<!-- 指定action的路径 -->
+				<param name="actionName">loginform</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/login</param>
+				<param name="actionName"></param>
+			</result>
+		</global-results>
+	 </package>
+</struts>

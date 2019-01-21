@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<!-- 修改默认参数值 -->
+	<constant name="struts.multipart.maxSize" value="2000097152"></constant>
+	<package name="file" namespace="/uploadfile" extends="struts-default">
+		<action name="upload">
+			<result>/WEB-INF/uploadFile.jsp</result>
+		</action>
+		<action name="uploadFile" class="action.UploadFileAction">
+			<result>/WEB-INF/ok.jsp</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/ajax02/js/my.js"></script>
+<script type="text/javascript" src="/ajax02/js/prototype-1.6.0.3.js"></script>
+<script type="text/javascript" src="/ajax02/js/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+	function change(value){
+		var xhr=getXhr();
+		xhr.open("get","city.do?city="+value,true);
+		xhr.onreadystatechange=function(){
+			$("#sel2").html("");
+			if(xhr.readyState==4){
+				var str=xhr.responseText;
+				var data=str.evalJSON();
+					console.log(data);
+				for(i=0;i<data.length;i++){
+					var val=data[i].value;
+					var txt=data[i].name;
+					var opt=new Option(txt,val);
+					$("#sel2").get(0).options[i]=opt;
+					
+				}				
+			}
+		}
+		xhr.send(null);
+	}
+</script>
+</head>
+<body>
+	<select id="sel1" onchange="change(this.value);">
+		<option value="-1">--请选择--</option>
+		<option value="s1">江苏</option>
+		<option value="s2">安徽</option>
+		<option value="s3">浙江</option>
+	</select>
+	<select id="sel2">
+		<option value="-2">--请选择--</option>
+	</select>
+</body>
+</html>

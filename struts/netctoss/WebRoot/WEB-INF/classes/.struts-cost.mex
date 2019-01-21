@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="cost" location="0,0" size="0,0">
+    <action name="feelist" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="fee_list.jsp" />
+      </result>
+    </action>
+    <action name="del" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="fail" />
+      <result name="error">
+        <resourceEdge source="error" routing="0" target="error.jsp" />
+      </result>
+    </action>
+    <action name="start" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="stop" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="detail" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="detailCost.jsp" />
+      </result>
+    </action>
+    <action name="back" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+    <action name="modify" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="modify.jsp" />
+      </result>
+    </action>
+    <action name="update" location="0,0" size="0,0">
+      <result name="success" />
+      <result name="error">
+        <resourceEdge source="error" routing="0" target="error.jsp" />
+      </result>
+    </action>
+    <action name="load" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="modify.jsp" />
+      </result>
+    </action>
+    <action name="updatecost" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="modify.jsp" />
+      </result>
+    </action>
+    <action name="fee_add" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="fee_add.jsp" />
+      </result>
+    </action>
+    <action name="addcost" location="0,0" size="0,0">
+      <result name="success">
+        <resourceEdge source="success" routing="0" target="fee_add.jsp" />
+      </result>
+      <result name="fail">
+        <resourceEdge source="fail" routing="0" target="fee_add.jsp" />
+      </result>
+    </action>
+    <action name="backcost" location="0,0" size="0,0">
+      <result name="success" />
+    </action>
+  </package>
+  <webResource name="fee_list.jsp" path="/WEB-INF/cost/fee_list.jsp" location="0,0" size="0,0" />
+  <webResource name="error.jsp" path="/WEB-INF/error.jsp" location="0,0" size="0,0" />
+  <webResource name="detailCost.jsp" path="/WEB-INF/cost/detailCost.jsp" location="0,0" size="0,0" />
+  <webResource name="modify.jsp" path="/WEB-INF/cost/modify.jsp" location="0,0" size="0,0" />
+  <webResource name="fee_add.jsp" path="/WEB-INF/cost/fee_add.jsp" location="0,0" size="0,0" />
+</Struts2Diagram>
+

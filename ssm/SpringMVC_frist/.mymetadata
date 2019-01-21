@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="SpringMVC_frist"
+  id="myeclipse.1509605668222"
+  context-root="/SpringMVC_frist"
+  j2ee-spec="5.0"
+  archive="SpringMVC_frist.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

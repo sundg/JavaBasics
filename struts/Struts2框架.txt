@@ -1,0 +1,350 @@
+Struts2框架
+
+
+======================================================
+======================================================
+第一天
+
+1、背景
+Servlet/JSP
+JSP Model1
+	JSP:负责数据的展示，收集数据、大量的业务逻辑
+	Java Bean:封装及处理数据
+JSP Model2
+	M:model(模型)封装和处理数据，entity、dao、Service
+	V:view(视图)展示数据、收集数据 JSP
+	C:controller(控制)模型与视图连接的桥梁servlet
+	优势：
+		1、业务与视图进行了分离，降低了耦合度，
+		   当模型的调用发生了改变，不会影响视图
+		2、模型复用，即通过M取到的数据，
+		   可以通过不同的方式展示出来
+		3、方便测试
+	缺点：
+		1、加大设计的难度
+		2、加大了代码量，从而带来开发成本的增加
+框架
+Struts1
+webwork   x-work
+Struts2 停更  日企
+
+衡量框架的标准
+	稳定性  高
+	易用性  高
+	扩展性  高
+	侵入性  低
+
+
+1、Structs2框架
+	是一个轻量级MVC型框架，侧重点在于请求的分发，重心是控制层与视图层
+2、使用Struts2开发的步骤
+	step1：新建web工程
+	step2：配置前端控制器
+	step3：配置struts.xml文件
+	step4：编写Action
+	
+	请求过程：localhost:8080/struts01/day01/sayHello.action
+		step1：根据应用名(struts01)找到对应的文件
+		step2：根据namespace(/day01)匹配struts.xml文件中的package
+		step3：根据sayHello.action匹配package中的action，从而找到对应的业务控制器
+		step4：默认调用Action中的execute方法
+		step5：根据execute方法返回数据确定调用哪一个result
+		step6：根据result中的视图路径将数据输出到页面上
+3、如何获取参数值
+	?name=zs
+	a、基本类型注入：
+		在Action中定义相同名字的成员变量，并提供get/set方法
+	b、域模型
+		在表单的数据比较多时，将表单中的name属性值封装在实体类中，
+		将来在Action中定义该引用类型的变量，并提供get/set方法
+	如何将Action中的数据输出到页面上?
+		${name}
+
+4、NETCTOSS(电信运营支撑系统网络版)
+	电信有一套unix服务对外出租，用户需要申请账号才能使用，这套服务需要收费，
+	因此有一套DMS采集端采集用户的消费情况，并解析数据，将解析完的数据以文件的
+	形式发送给DMS服务端，DMS服务将数据保存到数据库中,将来营业员
+	
+	jdbc:mysql://localhost:3306/netctoss?useUnicode=true&characterEncoding=utf8
+	资费---列表查询
+	step1：设计表
+	step2：定义实体类
+	step3：定义DAO接口
+	step4：实现类DAOImpl
+	step5：Action--输入算输出
+	step6：jsp
+	step7：配置(web.xml,struts.xml)
+
+
+
+	<c:forEach begin="" end="" var="p">${p}</c:forEach>
+	end:总页数
+	
+	DAO int getTotalPages(int pageSize)
+	总记录数/pageSize
+	
+	list.action--->List(6)
+	
+	select * from cost limit ?,?;
+	第一个?：从第几条记录开始抓取 下标从0开始  0,3
+	第二个?:抓取几条记录		   			   3,3
+
+
+
+=============================================================
+第二天
+	
+1、OGNL
+	是一门功能强大的表达式语言，类似于EL
+
+	访问基本类型属性
+		Ognl.getValue("属性名",对象);
+	访问引用类型属性
+		Ognl.getValue("引用.属性名",对象);
+	访问数组、集合
+		Ognl.getValue("属性名[下标]",对象);
+	访问map类型
+		Ognl.getValue("属性名.key",对象);
+		Ognl.getValue("属性名['key']",对象);
+	常规运算
+		Ognl.getValue("属性名+10",对象);
+		Ognl.getValue("属性名>10",对象);
+	调用普通方法
+		Ognl.getValue("属性名.方法名()",对象);
+	调用静态方法
+		Ognl.getValue("@完整类路径@方法名()",对象);
+	创建对象
+		Ognl.getValue("{值1,值2,...}",对象);
+		Ognl.getValue("#{'key1':value1,'key2':value2,...}", null);
+
+2、值栈(ValueStack)
+	分为三部分：ognl引擎、栈区、map区，其中栈区与map区用来存放不同类型的数据，
+	通常情况下，栈区中存放与业务相关的对象，比如业务控制器Action，map区存放一
+	些公共的对象，比如request、session等等
+	
+	存放数据:
+		拦截器可以拦截到表单中的数据，并将其存放在vs值栈中，ognl引擎根据拦截到的
+		数据从stack区依次查找相同属性的名字，如果找到，给其赋值
+	
+	获取数据:
+		外部与vs值栈交互的方式是通过ognl表达式，ognl引擎会根据ognl表达式从stack区
+		依次查找相同名字的属性，如果找到，将数据返回
+	
+3、el表达式为什么能获取vs值栈中的数据
+	el表达式默认查找数据的范围是pageContext、request、session、application，在struts2
+	中对request.getAttribute()方法进行了重写，重写之后，依然先从request中查找数据，若
+	未找到，则从vs值栈中查找，因此，在struts2中，el表达式查找数据的范围变为pageContext、
+	request、VS、session、application
+
+4、struts2六大核心组件
+	1)FC
+		前端控制器：负责请求的分发
+	2)Action
+		业务控制器：负责处理某一类的业务
+	3)VS
+		值栈：是Action与JSP数据交互的媒介
+	4)Interceptor
+		拦截器：扩展业务需求
+	5)Result
+		负责输出的组件
+	6)Tags
+		标签
+	
+	执行流程：
+		step1、所有的请求先经过FC
+		step2、FC根据struts.xml文件中配置信息确定调用哪一个Action
+		step3、创建VS值栈对象
+		step4、创建Action，并将其放到VS值栈的栈顶
+		step5、调用Action的execute()方法，根据输入算输出
+		step6、在调用Action之前或之后会调用一系列拦截器
+		step7、根据Action返回的数据，确定调用哪一个Result
+		step8、Result将VS中的数据交给某一个视图去展示
+		step9、在jsp页面当中使用tags标签显示数据
+		
+		
+完成netctoss登录模块
+	需求：
+		收集用户输入的账号与密码，判断是否正确，若正确跳转主页面，
+		若错误，回到登录页面，并提示相关信息
+	前端校验：
+		非空
+		合法性
+	后台校验
+		
+
+
+=================================================================
+=================================================================
+
+第三天
+		
+datetime：1000-9999
+timestamp：1970-2038
+
+1、为什么在定义实体类时要实现序列化接口以及id？
+	任何类型的数据，在网络上传输或者本地传输时，
+	都需要转成二进制信息，实体类实现序列化接口的
+	目的是为了将来能够将其顺利的转成二进制信息，
+	只有转成二进制之后，才能对其数据进行传输。
+	文件的序列化与反序列化是根据序列化id进行的，
+	因此需要实现序列化id
+2、Struts2中如何获取session？
+	方式一：
+		ActionContext.getContext().getSession();
+		代码侵入性较强，不建议使用
+	方式二：
+		定义一个基类，实现SessionAware接口，重写相关方法
+		业务控制器只需要继承BaseAction，就可以使用基类中
+		获取的session值
+3、Result
+	什么是Result？
+		Result是一个输出组件，用来将VS中的数据通过指定的格式输出，
+		比如转发、重定向等等。每一个Result都是一个类，这些类的共
+		同点需要实现Result接口，在Struts2中，配置了10种result类型，
+		被定义在struts-default.xml文件中
+	常用的Result类型
+		a、dispatcher
+			默认类型，用于转发，将数据转发给jsp页面展示
+		b、redirectAction
+			重定向，一个action重定向到另外一个action
+		c、stream
+			用于输出二进制信息，可以将二进制的数据输出到请求的发起端
+		d、json
+			在预置的10种result类型中没有json，若想使用json，需要引
+			入struts-json-plugin.jar，并且将继承的父包改成json-default
+			默认情况下，JsonResult会将当前栈顶所有的属性做成json返回，
+			可以通过配置返回指定的数据
+				方式一：指定返回某一个属性
+					<result>
+						<param name="root">ognl表达式</param>
+					</result>
+					ognl表达式类型如果是基本类型，JsonResult直接返回该属性的值，
+					并不会做成json格式的字符串
+					如果是引用类型，会将该对象的属性名与属性值做成json格式的字符串返回
+				
+				方式二：返回某几个值
+					<result>
+						<param name="includeProperties">flag,valicode,...</param>
+					</result>
+					JsonResult会将多个属性做成json格式的字符串。{"flag":true,"valicode":"sss"}
+		
+		
+4、完成netctoss资费模块的删除
+	删除--->
+		
+		
+==================================================================================================
+==================================================================================================
+第四天
+
+1、Tags标签
+	显示标签
+	<s:property value="ognl表达式">
+		ognl引擎会根据ognl表达式从VS值栈中查找数据，表达式前
+		若加了"#",ognl会从map中查找，反之，从stack中查找
+	循环标签
+		<s:iterator value="ognl表达式">
+			循环体
+		</s:iterator>
+		循环过程当中，vs值栈的栈顶由原先Action改变为循环遍历的对象，
+		当循环结束之后，栈顶恢复为Action
+		<s:iterator begin="1" end="5" var="p">
+			循环体
+		</s:iterator>
+		在分页时，循环遍历的是数值，而包装类Integer没有属性，
+		所以定义一个绑定名p，将来p被分配到map区，p的值为每次
+		遍历的数值，可以通过ognl表达式#p获取其数据
+		
+	判断标签
+		<s:if test="ognl表达式">
+			标签体
+		</s:if>
+		<s:elseif test="ognl表达式">
+			标签体
+		</s:elseif>
+		<s:else test="ognl表达式">
+			标签体
+		</s:else>
+		
+		
+2、UI标签
+	ui标签可以用来生成表单框体以及数据回显
+	<s:form></s:form>
+	<s:textfiled></s:textfiled>文本输入框
+	<s:password></s:password>密码输入框
+	<s:radio></s:radio>单选按钮
+	<s:checkboxlist></s:checkboxlist>复选框
+	<s:select></s:select>下拉框
+	<s:textarea></s:textarea>文本域
+		
+		
+======================================================================
+======================================================================
+第五天
+
+1、拦截器
+	适合封装通用的功能，方便代码的复用，比如登录验证、参数传递、事物控制等
+	
+	优势：
+		提高代码的灵活性，方便后期维护和扩展
+2、如何写一个拦截器
+	step1、定义一个java类，实现Interceptor
+	step2、重写相关方法
+	step3、在struts.xml文件中定义拦截器
+		
+===================================================================================
+===================================================================================
+第六天
+	文件上传	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+

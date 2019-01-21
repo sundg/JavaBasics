@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/ajax01/js/my.js"></script>
+<script type="text/javascript">
+	var usernameFlag=false;
+	var pwdFlag=false;
+	function checkUsername(){
+		//非空校验
+		var username=document.getElementById("username").value;
+		if(username==null||username.trim().length==0){
+			document.getElementById("usernameMsg").innerHTML="不能为空";
+			return;
+		}
+		//唯一校验
+		var xhr=getXhr();
+		//初始化
+		var uri="checkUsername.do?username="+username+"&"+new Date().getTime();
+		xhr.open("get",encodeURI(uri),true);
+		//绑定事件函数
+		xhr.onreadystatechange=function(){
+			//根据服务器返回的数据局部更新页面
+			if(xhr.readyState==4){
+				var data=xhr.responseText;
+				if("ok"==data){
+					usernameFlag=true;
+					document.getElementById("usernameMsg").innerHTML="可以使用";
+				}else if("error"==data){
+					usernameFlag=false;
+					document.getElementById("usernameMsg").innerHTML="已被占用";
+				}
+			}
+		}
+		//发请求
+		xhr.send(null);
+		//alert("afdsd");
+	}
+	
+	function checkUsername2(){
+		//非空校验
+		var username=document.getElementById("username").value;
+		if(username==null||username.trim().length==0){
+			document.getElementById("usernameMsg").innerHTML="不能为空";
+			return;
+		}
+		//唯一校验
+		var xhr=getXhr();
+		//初始化
+		xhr.open("post","checkUsername.do",true);
+		//设置响应消息头
+		xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+		//绑定事件函数
+		xhr.onreadystatechange=function(){
+			//根据服务器返回的数据局部更新页面
+			if(xhr.readyState==4){
+				//判断服务器返回的状态是否有异常
+				if(xhr.status==200){
+				var data=xhr.responseText;
+				document.getElementById("usernameMsg").innerHTML=data;
+				}else{
+					document.getElementById("usernameMsg").innerHTML="系统繁忙";
+				}
+			}
+		}
+		document.getElementById("usernameMsg").innerHTML="正在验证";
+		//发请求
+		xhr.send("username="+username);
+	}
+	function checkPwd(){
+		//非空验证
+		var pwd=document.getElementById("pwd").value;
+		if(pwd==null||pwd.trim().length==0){
+			document.getElementById("pwdMsg").innerHTML="不能为空";
+			return;
+		}else{
+			document.getElementById("pwdMsg").innerHTML="";
+			pwdFlag=true;
+		}
+	}
+	//通过该函数的返回值控制是否向表单的action地址发请求
+	function check(){
+		//当用户名与密码都校验成功时，用户点击注册按钮才会向表单的action地址发送请求
+		return usernameFlag&&pwdFlag;
+	}
+</script>
+</head>
+<body>
+	<form method="post" action="regist.do" onsubmit="return check();">
+		<table>
+			<tr>
+				<td>用户名:</td>
+				<td>
+					<input id="username" name="username" onblur="checkUsername();"/>
+					<span id="usernameMsg" style="color:red"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>密码:</td>
+				<td><input id="pwd" name="pwd" onblur="checkPwd();"/>
+					<span id="pwdMsg" style="color:red"></span>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="注册"/></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

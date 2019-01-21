@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/ajax03/js/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+	//页面加载完之后，会立即调用该回调函数
+	$(function(){
+		//给select绑定change事件
+		//需要在jquery1.7以上版本才能使用
+		$("select").on("change",function(){});
+		$("select").change(function(){
+			//当option选项发生切换时，向服务器发请求
+			//获取电影描述信息
+			$.ajax({
+				"url":"movie2.do",
+				"type":"post",
+				"data":{"value":this.value},
+				"dataType":"xml",
+				"success":function(data,txt){
+					//如果服务器返回的数据类型是xml，则data是xml对象的那颗树
+					//如果服务器返回的数据类型是json，则data是js对象
+						console.log(data);
+						console.log(txt);
+						//$("span").html("描述信息:"+data.desc);
+						$("span").html("描述信息:"+$(data).find("desc").text());
+						},
+				"error":function(xhr,txt,e1){
+						console.log(xhr);
+						console.log(txt);
+						console.log(e1);
+				}
+			});
+		});
+	});
+	
+</script>
+</head>
+<body>
+	<form>
+		<select>
+			<option  value="0">--请选择--</option>
+			<option  value="zl">追龙</option>
+			<option  value="ktl">空天猎</option>
+			<option  value="yldj">英伦对决</option>
+		</select>
+	</form>
+	<span id="des"></span>
+</body>
+</html>

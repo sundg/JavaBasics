@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/ajax02/js/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="/ajax02/js/my.js"></script>
+<script type="text/javascript">
+	function change(value){
+		//获取ajax对象
+		var xhr=getXhr();
+		//初始化
+		xhr.open("get","course.do?value="+value,true);
+		//绑定事件函数
+		xhr.onreadystatechange=function(){
+			$("#s2").html("");
+			//处理服务器返回的数据
+			if(xhr.readyState==4){
+				var data=xhr.responseText;
+				var arrs=data.split(",");
+				console.log(arrs);
+				for(i=0;i<arrs.length;i++){
+					var val=arrs[i].split(":")[0];
+					var text=arrs[i].split(":")[1];
+					var op=new Option(text,val);
+					//jq对象--->dom对象get(0)   get()[0]
+					//dom对象--->jq对象   $(this)
+					$("#s2").get(0).options[i]=op;
+				}
+			}
+		}
+		xhr.send(null);
+	}
+</script>
+</head>
+<body>
+	<select id="s1" onchange="change(this.value)">
+		<option value="-1">--请选择--</option>
+		<option value="one">第一阶段</option>
+		<option value="two">第二阶段</option>
+		<option value="three">第三阶段</option>
+		<option value="four">第四阶段</option>
+	</select>
+	<select id="s2">
+		<option value="-2">--请选择--</option>
+	</select>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<package name="day05" namespace="/day05" extends="struts-default">
+		<interceptors>
+			<interceptor name="some" class="interceptor.SomeInterceptor"></interceptor>
+			<interceptor name="other" class="interceptor.OtherInterceptor"></interceptor>
+			
+			<!-- 拦截器栈 -->
+			<interceptor-stack name="someother">
+				<interceptor-ref name="some"></interceptor-ref>
+				<interceptor-ref name="other"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<action name="some" class="action.SomeAction">
+			<!-- <interceptor-ref name="some"></interceptor-ref>
+			<interceptor-ref name="other"></interceptor-ref> -->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="someother"></interceptor-ref>
+			<result>/WEB-INF/some.jsp</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+	</package>
+</struts>

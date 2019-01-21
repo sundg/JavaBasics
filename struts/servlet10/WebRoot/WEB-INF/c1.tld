@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+     <tlib-version>1.1</tlib-version>
+    <short-name>c1</short-name>
+    <!-- 唯一 -->
+  <uri>http://java.sun.com/jsp/jstl/sun/myTag</uri>
+  <!-- 每一个标签元素对应着一组tag标记 -->
+    <tag>
+    <!-- 标签元素名称 -->
+    <name>forInfo</name>
+    <!-- 标签类路径 -->
+    <tag-class>tag.HelloTag</tag-class>
+    <!-- 标签体 -->
+    <body-content>empty</body-content>
+    <!-- 定义标签当中的属性 -->
+    <attribute>
+    	<!-- 标签属性名称 -->
+        <name>qty</name>
+        <!-- 定义该属性是否是必须存在 -->
+        <required>true</required>
+        <!-- 该属性是否可以通过表达式给其赋值 -->
+        <rtexprvalue>false</rtexprvalue>
+        <!-- 属性类型 -->
+		<type>int</type>
+    </attribute>
+    <attribute>
+        <name>msg</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <!-- 引用类型需要写完整的类路径 -->
+        <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  
+  
+  
+   <tag>
+    <!-- 标签元素名称 -->
+    <name>date</name>
+    <!-- 标签类路径 -->
+    <tag-class>tag.DateTag</tag-class>
+    <!-- 标签体 -->
+    <body-content>empty</body-content>
+    <!-- 定义标签当中的属性 -->
+    <attribute>
+    	<!-- 标签属性名称 -->
+        <name>pattern</name>
+        <!-- 定义该属性是否是必须存在 -->
+        <required>true</required>
+        <!-- 该属性是否可以通过表达式给其赋值 -->
+        <rtexprvalue>false</rtexprvalue>
+        <!-- 属性类型 -->
+		<type>java.lang.String</type>
+    </attribute>
+  </tag>
+  
+  
+</taglib>

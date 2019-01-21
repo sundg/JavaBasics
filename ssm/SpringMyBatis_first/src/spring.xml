@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd" >
+	
+	
+
+	
+	<!-- Setter注入
+	<bean id="emp2" class="com.sdg.entity.Emp">
+		<property name="id" value="1001"/>
+		<property name="name" value="马云"/>
+	</bean> -->
+	
+	<!-- 构造器注入 -->
+	<bean id="dept" class="com.sdg.entity.Dept">
+		<constructor-arg index="0" value="1002"/>
+		<constructor-arg index="1" value="马化腾"/>
+	</bean>
+	
+ 	<bean id="emp" class="com.sdg.entity.Emp">
+		<constructor-arg index="0" value="1003"/>
+		<constructor-arg index="1" value="王健林"/>
+	</bean>
+
+	
+	<!-- 自动装配 -->
+	<bean id="company" class="com.sdg.entity.Company" autowire="constructor"/>
+	
+	<!-- 参数值注入 -->
+	<bean id="user" class="com.sdg.entity.User">
+		<!-- 基本参数值 -->
+		<property name="id" value="20"/>
+		<property name="list">
+			<list>
+				<value>list1</value>
+				<value>list2</value>
+				<value>list3</value>
+			</list>
+		</property>
+		<property name="set">
+			<set>
+				<value>set1</value>
+				<value>set2</value>
+				<value>set3</value>
+			</set>
+		</property>
+		<property name="map">
+			<entry key="jsd1" value="10"/>
+			<entry key="jsd2" value="20"/>
+			<entry key="jsd3" value="30"/>
+		</property>
+		<property name="properties">
+			<props>
+				<prop key="user">root</prop>
+				<prop key="pwd">1234</prop>
+			</props>
+		</property>
+	</bean>
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

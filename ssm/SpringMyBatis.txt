@@ -1,0 +1,1224 @@
+SpringMyBatis
+郭小培  13951766369
+=======================================================
+第一天
+1、Spring简介
+	Spring是一个开源的轻量级应用开发框架，其目的是用于简化
+	企业应用程序的开发，降低侵入性(解耦)
+	
+	Spring提供的IOC和AOP功能，可以将组件的耦合度降至最低，
+	即解耦，便于系统的维护和升级
+	
+	Spring为系统提供一个整体的解决方案，开发者可以利用它本身
+	提供的功能外，也可以与第三方框架和技术整合应用，可以自由
+	选择采用哪一种技术进行开发
+	
+	第一方：JDK
+	第二方：开发者
+	第三方：框架
+	
+	
+	Spring的本质是管理软件中的对象，即创建对象和维护对象之间的
+	关系
+
+2、Spring容器
+	在Spring中，任何的java类和JavaBean都被当成Bean处理，这些Bean
+	通过容器管理和使用
+	
+	Spring容器有BeanFactory和ApplicationContext两种类型
+	
+	Spring容器的实例化
+		ApplicationContext继承自BeanFactory接口，拥有更多的企业级
+		方法(推荐)
+		加载工程classpath下的配置文件实例化
+		String xml="配置文件路径";
+		ApplicationContext ac=new ClassPathXmlApplicationContext(xml);
+		
+	Spring容器的使用
+		从本质上讲，BeanFactory和ApplicationContext仅仅只是一个维护Bean
+		定义以及相互依赖关系的高级工厂接口，通过容器访问Bean定义
+		
+		首先在容器配置文件spring.xml中添加Bean定义
+			<bean id="标识符" class="Bean类型"/>
+		然后在创建容器对象后，调用getBean()方法获取Bean实例
+			getBean("标识符");
+3、Bean的实例化
+	Spring容器创建Bean对象的方式有以下三种
+		ApplicationContext ac=new ClassPathXmlApplicationContext("spring.xml");
+		
+		1)用构造器来实例化
+			<bean id="" class=""/>
+			ac.getBean("id");
+		2)静态工厂方法实例化
+			<bean id="" class="" factory-method=""/>
+			ac.getBean("id",类型.class);
+		3)实例工厂方法实例化
+			<bean id="" factory-method="" factory-bean=""/>
+			ac.getBean("id",类型.class);
+	
+4、Bean的作用域
+	Spring容器在实例化Bean时，可以创建以下作用域的Bean对象
+		singleton：在Spring容器中一个Bean定义对应一个实例对象，默认项
+			注：不同声明创建的对象不同
+		prototype：一个Bean定义对应多个实例对象
+		request：在一次HTTP请求中一个Bean定义对应一个实例对象
+		session：在一次HTTP Session中，一个Bean定义对应一个实例对象
+		
+		Bean的作用域可以通过<bean>定义的scope属性指定
+		
+5、Bean的生命周期
+	指定初始化回调方法
+		<bean init-method=""/>
+	指定销毁回调方法,仅适用于singleton模式的Bean
+		<bean destroy-method=""/>
+	在<beans>元素中的default-init-method属性，可以为容器中的<bean>指定初始化
+	回调方法，也可以通过default-destroy-method属性为容器中的<bean>指定销毁回
+	调方法
+	
+	
+6、Bean的延迟实例化
+	默认行为是在容器实例化的同时将单例模式的Bean提前进行实例化
+	
+	延迟实例化操作：
+		在<bean>声明时指定其属性lazy-init为true，一个延迟实例化的Bean将在第一次
+		被用到时实例化
+		注意：仅适用于单例模式
+		
+		在<beans>元素中的default-lazy-init属性，可以为容器中的<bean>指定延迟实例化特性
+	
+7、基于注解的组件扫描
+	a、什么是组件扫描
+		指定一个包路径，Spring会自动扫描此包及其子包中
+		所有的组件类，当发现组件类定义前有特定的注解标
+		记时，就将此组件纳入到Spring容器中管理，等价于
+		原有的xml配置中的<bean>定义
+		
+		组件扫描可以替代大量的xml配置的<bean>定义
+		
+		指定扫描类路径，使用组件扫描，首先需要在xml配置
+		中指定扫描父级package路径
+		<context:component-scan base-package="com.sdg"/>
+		容器会自动扫描指定包及其子包下所有的组件类，如果
+		此组件类定义前有特定的注解标记，则会实例化为Bean
+		
+		自动扫描的注解标记
+			@Component    通用注解
+			@Repository   持久层组件注解
+			@Service      业务层组件注解
+			@Controller   控制层组件注解	
+	
+	b、自动扫描组件的命名
+		当一个组件在扫描过程中被检测到时，会生成一个默认的ID值，
+		默认ID为小写开头的类名,也可以在注解标记中自定义ID
+	c、指定组件的作用域
+		通常受Spring容器管理的组件，默认作用域是"singleton"，如果
+		需要其他的作用域可以使用@Scope注解，只要在注解中提供作用域
+		的名称即可
+	d、指定初始化和销毁的回调方法
+		@PostConstruct和@PreDestroy注解标记分别用于指定初始化和
+		销毁的回调方法
+	
+=====================================================================================
+第二天
+
+1、Spring IOC
+	IOC全称是Inversion Of Control,被翻译成控制反转
+	IOC是指程序中对象的获取方式发生反转，由最初的new方式创建，
+	转变为由第三方框架创建，注入(DI)，它降低对象之间的耦合度
+	
+	Spring容器采用DI方式实现IOC控制，IOC是Spring框架的基础和核心
+	
+	DI(Dependency Injection)依赖注入，其基本原理是将一起工作具有
+	关系的对象，通过方法参数传入，建立关系，因此容器的工作就是创建
+	Bean对象时注入依赖关系
+	
+	IOC是一种思想，而DI是实现IOC的主要技术途径
+	DI主要有两种注入方式，即Setter注入和构造器注入
+	
+	a、Setter注入
+		通过调用无参构造器或无参static工厂方法实例化Bean之后，调用
+		此Bean的setter方法，即可实现Setter方式的注入
+		<bean id="emp" class="com.sdg.entity.Emp">
+		<property name="id" value="1001"/>
+		<property name="name">
+			<value>张三</value>
+		</property>
+		</bean>
+	b、构造器注入
+		通过调用带参数的构造器来实现，容器在Bean被实例化的时候，根据
+		参数类型执行相应的构造器
+		<bean id="dept" class="com.sdg.entity.Dept">
+		<constructor-arg index="0" type="java.lang.Integer" value="10"/>
+		<constructor-arg index="1" value="研发部"/>
+		</bean>
+	自动装配
+		Spring容器可以自动装配(autowire)相互协作Bean之间的关联关系，autowire可以
+		针对单个Bean进行设置，方便之处在于减少xml配置
+		
+		在配置文件中，可以在<bean>元素中使用autowire属性指定自动装配规则，一共有四种类型
+		
+				 no：禁用自动装配，默认值
+			 byName：根据属性名自动装配，此选项将检查容器，根据名字查找与属性名一致的Bean，
+					 然后将其与属性自动装配(Setter注入)
+			 byType：如果容器中存在一个与指定属性类型相同的Bean，则将与此属性自动装配(Setter注入)
+		constructor：与byType方式类似，不同之处在于它应用于构造器参数(构造器注入)
+	
+	
+2、参数值注入
+	1)注入基本值
+		<value>元素可以通过字符串指定属性或构造器参数的值，容器会将字符串从java.lang.String类型
+		转换为实际的属性或构造器参数类型，然后给Bean对象注入
+		<property name="name" value="张三"/>
+	2)注入Bean对象
+		注入外部Bean(引用方式，方便重用)
+		<property name="user" ref="user"/>
+	3)注入集合
+		通过<list>,<set>,<map>,<props>元素可以定义和设置与java类型中对应
+		的List、Set、Map及Properties的属性值
+		a、list
+			<property name="languages">
+			<list>
+				<value>C++</value>
+				<value>Python</value>
+				<value>PHP</value>
+			</list>
+			</property>
+		b、set
+			<property name="cities">
+			<set>
+				<value>北京</value>
+				<value>黑龙江</value>
+				<value>上海</value>
+			</set>
+			</property>
+		c、map
+			<property name="score">
+			<map>
+				<entry key="Jsd1707">
+					<value>83</value>
+				</entry>
+				<entry key="jsd1702" value="92"/>
+				<entry key="jsd1705" value="82"/>
+			</map>
+			</property>
+		d、properties
+			<property name="properties">
+			<props>
+				<prop key="user">root</prop>
+				<prop key="pwd">123456</prop>
+			</props>
+			</property>
+		
+		List、Set、Map及Properties都可以采用引入方式注入
+		<util:list>、<util:set><util:map><util:properties>
+	4)注入Spring表达式
+		#{id.属性}
+		Spring表达式语言，和EL表达式在语法上很相似，可以读取一个Bean对象或集合中的数据
+	5)注入null或空字符串
+		Spring将属性的空参数当做空String
+		
+		<bean>
+			<property name="name" value=""/>
+		</bean>
+		
+		如果需要注入null值，可以使用<null>元素
+		<bean>
+			<property name="name">
+				<null/>
+			</property>
+		</bean>
+	
+
+
+3、基于注解的依赖注入
+	具有依赖关系的Bean对象，可以使用以下任意一种注解实现
+	
+	@Autowired/@Qualifier
+		可以处理构造器注入和Setter注入
+		@Autowired写在构造器或set方法前，声明需要为其注入Bean
+		@Qualifer写在参数前面，声明注入Bean的id
+		
+		@Autowired/@Qualifier也可以写在属性上，作用和写在set方法上类似，
+		但是只会执行一行代码(赋值代码)
+		
+		注意：注入对象是单例时，@Qualifier可省略，此时Spring按照参数类型匹配参数值
+	@Resource
+		只能处理setter注入
+		
+		@Resource也可以写在属性上，作用和写在set方法上类似，
+		但是只会执行一行代码(赋值代码)
+		
+		注意：注入对象是单例时，(name="标识符")可省略，此时Spring按照参数类型匹配参数值
+	@Inject/@Named
+		@Autowired/@Qualifier用法一致，需要额外导包
+		其中，@Inject等价于@Autowired,@Named等价于@Qualifier
+		
+		
+		@Inject/@Named注解标记是Spring3.0开始增添的对JSR-330标准的支持，
+		需要额外添加JSR-330的jar，javax.inject-1.jar
+	
+	
+	注入基本值或Spring表达式值
+	@Value注解可以注入基本值或Spring表达式
+		语法：@Value("张三")/@Value("#{user.name}")
+	
+	
+===========================================================================================
+第三天	
+	
+1、Spring MVC
+	1)MVC模型
+		M-Model模型层
+			模型(model)的职责是负责业务逻辑，包含两层：业务数据和业务处理逻辑，
+			比如实体类、DAO、Servcie都是属于模型层
+		V-View视图
+			视图(view)的职责是负责显示界面和用户交互(收集用户信息)，属于视图层的组
+			件是不包含业务逻辑和控制逻辑的JSP
+		C-Controller控制器
+			控制器是模型层与视图层之间的桥梁，用于控制流程，比如在Servlet项目中单一
+			控制器ActionServlet
+	2)什么是Spring MVC
+		Spring MVC是Spring框架中一个功能模块，实现MVC结构，便于简单、快速开发MVC结构的
+		WEB程序，Spring MVC提供的API封装了WEB开发中常用的功能，简化WEB开发过程
+	3)Spring MVC的核心组件
+		Spring MVC提供M、V和C相关的主要实现组件，具体如下：
+			a、DispatcherServlet(控制器，请求入口)
+			b、HandlerMapping(控制器，请求的派发)
+			c、Controller(控制器，请求处理流程)
+			d、ModelAndView(模型，封装业务处理结果和视图名称)
+			e、ViewResolver(视图，视图显示处理器)
+	4)Spring MVC的处理流程(工作原理)
+		浏览器向服务器发送请求，请求交给前端控制器DispatcherServlet处理，前端控制器通
+		过HandlerMapping找到相对应的Controller组件来处理请求，执行Controller组件的约定
+		来处理请求，在约定方法中调用模型层组件完成业务处理，约定方法返回一个ModelAndView
+		对象，此对象封装处理结果数据和视图名称信息，前端控制器接受ModelAndView对象之后，
+		调用ViewResolver组件定位View(Jsp),传递数据信息，生成响应页面
+	
+2、基于XML配置的MVC应用
+	搭建Spring MVC环境
+		创建WEB工程，导入Spring MVC相关开发包
+			Spring IOC、web、webMVC
+		在src下添加spring.xml配置文件
+			名称可以自定义，例如spring-mvc.xml
+		在web.xml中配置DispatcherServlet前端控制器组件
+			DispatcherServlet组件在Spring MVC中已提供，只需要配置即可，配置DispatcherServlet时，
+			同时指定XML配置文件路径
+	
+	Controller组件负责执行具体的业务处理，编写时需要实现Controller接口及约定方法handleRequest
+	
+	handleRequest方法执行后会返回一个ModelAndView对象，此对象封装的是模型数据和视图名称
+	
+	ModelAndView(String viewName)
+	
+	ModelAndView(String viewName,Model model)
+		viewName是视图名称，model是业务处理的数据
+	
+	通过HandlerMapping组件，DispatcherServlet控制器可以将客户端的HTTP请求映射到对应的Controller组件上
+	SImpleUrlHandlerMapping维护一个个HTTP请求和Controller映射关系列表(Map)，根据列表对应关系调用Controller
+	
+	ViewResolver组件，Controller组件返回一个ModelAndView对象，Spring中的视图是以名字为标志，
+	视图解析器ViewResolver通过名字来解析视图
+	InternalResourceViewResolver：URLBasedViewResolver的子类，它支持InternalResourceView(对Servlet和JSP包装)，
+	以及子类JstlView和TitlesView响应类型
+	
+	
+3、基于注解配置的MVC应用
+	Controller注解应用
+		推荐使用@Controller注解声明Controller组件，可以使得Controller控制器定义更加灵活，可以不用实现Controller接口，
+		请求处理方法也可以灵活定义
+		
+		为了使@Controller注解生效，需要在Spring的xml配置文件中开启组件扫描定义
+		<context:component-scan base-package=""/>
+	RequestMapping注解应用
+		@RequestMapping注解可以用在类定义和方法定义上，表明此组件类或方法与哪一个请求对应
+		
+		开启@RequsetMapping注解映射，需要在Spring的xml文件中定义RequestMappingHandlerMapping
+		(类定义前)和RequestMappingHandlerAdapter(方法定义前)两个Bean组件
+		
+		注意：上述定义针对Spring 3.1版本之前，从Spring 3.2版本开始，可以使用下面的XML配置简化
+			<mvc:annotation-driven/>
+	
+	
+========================================================================================================
+第四天
+
+1、实战技巧
+	1)接受请求参数
+		SpringMVC请求提交数据到控制器有以下方式：
+			a、使用HttpServletRequest获取
+				Spring自动参数注入到HttpServletRequest，
+				优点直接，缺点是需要自己处理数据类型的转换
+			b、使用@RequestParam注解
+				Spring会自动将表单参数注入到方法参数(名称一致)
+				使用@RequestParam注解映射不一致的名称
+				优点是参数类型自动转换，但可能出现类型转换异常
+			c、使用自动封装成Bean对象
+				定义实体类，属性名必须与请求参数名相同			
+	2)向页面传值
+		当Controller组件处理后，需要向jsp传值时的方法
+			a、直接使用HttpServletRequest和HttpSession
+			b、使用ModelAndView对象
+				在Controller处理方法完成后返回一个ModelAndView对象，
+				包含显示视图名称和模型数据
+				用法示例：
+					Map<String,Object> map=new HashMap<String, Object>();
+					map.put("message", "操作成功");
+					return new ModelAndView("hello",map);
+			c、使用ModelMap参数对象
+				在controller处理方法中追加一个ModelMap类型的参数
+				modelMap.addAttribute("message", "操作失败");
+			d、使用@ModelAttribute注解
+				在Controller方法的参数部分或属性的get方法上使用
+				
+			注意：数据会利用HttpServletRequest的Attribute传递到jsp页面
+	3)重定向
+		SpringMVC默认采用转发方式定位视图，如果需要重定向方式，
+		可以采用以下方式：
+			a、使用RedirectView
+			b、使用redirect:前缀
+			
+		如果Controller的请求处理方法返回的是ModelAndView对象，
+		可以使用RedirectView方式重定向，示例代码：
+			public ModelAndView checkLogin(){
+				RedirectView view=new RedirectView(重定向url);
+				return new ModelAndView(view);
+			}
+		如果Controller的请求处理方法返回的是String类型，可以使
+		用"redirect:前缀"方式重定向，示例代码：
+			public String checkLogin(){
+				return "redirect:重定向url";
+			}
+	
+	
+2、登录
+	登录需求
+		打开登录页面，输入账号，密码，点击登录，进行校验
+			1)账号、密码正确，跳转至首页
+			2)账号或密码错误，停留在登录页面，给出提示
+		开发思路:
+		请求1（打开登录页面）执行过程：
+		浏览器--->DispatcherServlet--->Controller--->JSP
+		
+		请求2（提交登录）执行过程：
+		浏览器--->DispatcherServlet--->Controller--->JSP
+																|
+											--->Service--->DAO
+
+	开发步骤
+		1.创建项目，导包
+		2.配置DispatcherServlet
+		3.配置spring.xml
+
+		请求1：
+		在Controller中增加打开登录页面请求的处理方法，创
+		建登录页面
+		请求2：
+		在DAO增加根据账号查询用户的方法
+		在Servcie中增加校验账号和密码的方法
+		修改登录页面，提交表单
+			
+	
+	@Component/@Repository/@Service/@Controller
+	==》
+	<bean id=”” class=””/>
+
+
+	@Autowired/@Resource
+	==》
+	<bean>
+		<property name=”computer” ref=”computer”/>
+	</bean>
+
+	
+==============================================================================================
+
+第五天
+
+1、实战技巧问题
+	1)中文乱码解决方案
+		在表单提交时，如果遇到中文字符会出现乱码现象，Spring提供一
+		个CharacterEncodingFilter过滤器，可以解决乱码问题
+		
+		CharacterEncodingFilter使用时需要注意以下问题：
+			a、表单数据以post方式提交
+			b、在web.xml中配置CharacterEncodingFilter过滤器
+			c、页面编码和过滤器指定编码保持一致
+	2)异常处理
+		SpringMVC处理异常方式有以下三种：
+			a、使用Spring MVC提供的简单异常处理器
+				SimpleMappingExceptionResolver
+				只需要在Spring的配置文件中定义异常处理器即可
+			b、实现HandlerExceptionResolver接口(自定义异常处理器)
+				适合全局处理有“处理过程”的异常
+				自定义异常处理器需要在Spring的配置文件中定义才可以使用
+			c、使用@ExceptionHandler注解实现异常处理器
+				适合局部处理有“处理过程”的异常
+		
+	3)拦截器
+		拦截器接口
+			拦截器必须实现HandlerInterceptor接口
+			preHandle()
+				处理器执行前调用，方法如果返回true表示会继续调用其他拦截器或处理器
+				如果返回false表示中断流程，不会执行后续拦截器和处理器
+			postHandle()
+				处理器执行后视图处理调用前，此时可以通过ModelAndView对象对模型数据进行处理
+				或对视图进行处理
+			afterCompletion()
+				整个请求处理完毕后调用，如性能监控中可以在此记录结束时间，输出消耗时间，
+				可以进行资源清理，只有preHandle返回true时才会执行afterCompletion方法
+		自定义拦截器的配置
+			<mvc:interceprors>
+				<mvc:interceptor>
+					<!--需要拦截的url
+						注意：绝对路径是从应用名之后开始，不可以使用相对路径
+					-->
+					<mvc:mapping path=""/>
+					
+					<!--不需要拦截的url-->
+					<mvc:exclude-mapping path=""/>
+					
+					<!--拦截器组件-->
+					<bean class=""/>
+				</mvc:interceptor>
+			</mvc:interceptors>
+		提示：在自定义拦截器时，实现HandlerInterceptor接口需要实现定义的全部抽象方法，
+			  如果只需要某一个方法可以继承HandlerInterceptorAdapter
+		
+	
+	
+=======================================================================================================
+第六天
+1、Spring对jdbc的整合支持
+	Spring对DAO提供哪些支持
+	1)Spring对DAO异常提供统一处理
+	2)Spring对DAO编写提供支持的抽象类
+	3)提高编程效率，减少DAO编码量
+
+	Spring对DAO异常的支持
+		Spring把特定某种技术的异常，如SQLException，统一转化为自己的异常，
+		异常以DataAccessException为父类，它封装原始的异常对象，不会丢失原
+		始错误信息
+		
+		DataAccessException继承于RuntimeException，是非检查异常，在编译期间不会
+		因为没有处理异常而出现编译错误，如果异常必须处理可以使用拦截器，或者在
+		页面进行统一处理
+		
+	Spring对DAO编写的支持
+		Spring为了便于以一种一致的方式使用各种数据访问技术，如jdbc，Hibernate，Mybatis
+		Spring提供一套抽象的DAO类，这些抽象类提供一些方法，通过它们可以获得与数据访问
+		技术相关的数据源和其他配置信息
+		
+		JdbcTemplate：封装了常用jdbc方法
+		JdbcDaoSupport：jdbc数据访问对象的基类
+		
+		HibernateTemplate：封装了常用Hibernate方法
+		HibernateDaoSupport：Hibernate数据访问对象的基类
+	
+	
+		JdbcDaoSupport
+			利用JDBC技术编写DAO父类，通过此类提供的方法，
+			可便于获取Connection和JdbcTemplate对象信息
+			
+			JdbcDaoSupport使用时需要注入一个DataSource对象
+			JdbcDaoSupport对代码有一定的侵入性
+		JdbcTemplate
+			封装了连接获取以及连接释放等工作，从而简化我们对JDBC的使用，
+			避免忘记关闭连接等错误
+	
+	如何编写DAO组件
+		基于JDBC技术编写DAO组件可以采用以下两种方式：
+			1)DAO继承JdbcDaoSupport，通过getJdbcTemplate()方法获
+			  取JdbcTemplate对象，需要在DAO实现类中注入一个DataSource
+			  对象来完成JdbcTemplate的实例化
+			2)DAO不继承JdbcDaoSupport，在Spring容器中配置一个JdbcTemplate
+			  的Bean，然后注入给DAO组件
+			
+	实例操作：
+		use test;
+		
+		员工表
+		create table emp(
+			empno int(4) primary key auto_increment,
+			ename varchar(10) not null,
+			salary double(7,2),
+			bonus double(5,2),
+			hiredate date,
+			deptno int(4)
+		);
+	
+		insert into emp values(1001,'张三',33333.33,333.33,now(),1);
+		insert into emp values(1002,'李四',44444.44,444.44,now(),2);
+		insert into emp values(1003,'王五',55555.55,555.55,now(),3);
+		insert into emp values(1004,'赵六',66666.66,666.66,now(),4);
+	
+	练习：
+		部门表
+		create table dept(
+			deptno int primary key ,
+			dname varchar(20) not null,
+			dloc varchar(100)
+		);
+		
+		insert into dept values(1,'土木工程部','东京华夏区');
+		insert into dept values(2,'园林管理部','西京华夏区');
+		insert into dept values(3,'污水处理部','北京华夏区');
+		insert into dept values(4,'道路养护部','南京华夏区');
+		
+	
+2.Spring+JdbcTemplate应用（重构NETCTOSS资费模块）
+	1）创建工程，搭建Spring MVC和JDBC技术环境
+		创建一个WEB工程
+		添加JDBC相关技术环境
+			引入数据库驱动包
+			引入DBCP连接池开发包
+		添加Spring相关技术环境
+			引入Spring IOC，web，webmvc，jdbc，tx开发包
+			在src下添加spring.xml配置文件
+			在web.xml中配置DispatcherServlet主控制器
+			在web.xml中配置中文乱码解决过滤器CharacterEncodingFilter
+			
+	2）基于JdbcTemplate实现DAO组件
+		根据数据表编写实体类
+		编写DAO组件
+		在Spring配置文件中配置JdbcTemplate组件
+		在DAO组件中，注入JdbcTemplate对象
+		
+	3）编写和配置Spring MVC主要组件
+		编写Controller和请求处理方法
+		配置<mvc:annotation-driven/>支持@RequestMapping
+		配置Controller
+			开启组件扫描，将Controller扫描到Spring容器
+			需要DAO组件时采用注入方式注入
+			在请求处理方法上使用@RequestMapping指定对应请求
+		配置ViewResolver
+
+	4）编写JSP视图组件，利用JSTL标签和EL表达式显示数据
+
+	
+=======================================================================
+第七天
+
+1、MyBatis框架
+	什么是MyBatis，MyBatis最早源自于Apache基金会的一个开源项目iBatis，2010年项目由
+	Apache software foundation迁移到Goole Code，改名为MyBatis
+	
+	MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层框架，其使用简单的XML或
+	注解做配置和定义映射关系，将Java POJOS(Plain Old Java Objects)映射成数据库中的记录
+	
+	
+	MyBatis工作原理：
+		1)加载配置
+			配置有两种形式，一种是XML配置文件，一种是代码注解，MyBatis将SQL的配置信息加载为
+			一个个的MappedStatement对象(包括传入的参数映射配置，执行的sql语句，结果映射配置)，
+			将其存储在内存中
+		2)SQL解析
+			当API接口层收到调用请求时，会接收到传入的SQL的ID和传入的参数对象(可以是Map，实体类，
+			或者基本数据类型)，MyBatis会根据SQL的ID找到相应的MappedStatement，然后根据传入的参数
+			对象对MappedStatement进行解析，解析后可以得到最终要执行的sql语句和参数
+		3)SQL执行
+			将最终得到的sql语句和参数拿到数据库进行执行，得到操作数据库的结果
+		4)结果映射
+			将操作数据库的结果按照映射配置进行转换，可以转换成Map，实体类或者基本数据类型，最终将
+			转换结果返回
+			
+		
+			
+	MyBatis框架API
+		SqlSessionFactoryBuilder
+			此对象负责根据MyBatis主配置文件SqlMapConfig.xml构建SqlSessionFactory对象
+		SqlSessionFactory
+			每一个MyBatis的应用程序都以SqlSessionFactory对象为核心，此对象负责创建SqlSession对象
+		SqlSession
+			此对象包含所有执行sql语句操作的方法，用于执行已映射的sql语句
+	
+	MyBatis配置文件
+		1)SqlMapConfig.xml(1个)
+			主配置文件，用于指定数据库连接参数和框架参数
+		2)SqlMapper.xml(N个)
+			映射文件，用于定义sql语句和映射信息
+
+2、MyBatis基本应用
+	1)搭建MyBatis技术环境
+		为工程添加Mybatis开发包和数据库驱动包
+		在src下添加Mybatis主配置文件SqlMapConfig.xml
+		修改SqlMapConfig.xml，指定数据库连接参数
+		利用MyBatis API编程，获取SqlSession实例
+	2)获取SqlSession对象
+		String path="主配置文件url";
+		Reader reader=Resources.getResourceAsReader(path);
+		
+		//创建SqlSessionFactory
+		SqlSessionFactoryBuilder ssfb=new SqlSessionFactoryBuilder();
+		SqlSessionFactory ssf=ssfb.build(reader);
+		
+		//创建SqlSession
+		SqlSession ss=ssf.openSession();
+		
+	3)利用SqlSession实现CRUD操作
+		根据数据表编写实体类
+		编写SqlMapper.xml映射文件，定义SQL操作和映射信息
+		获取SqlSession对象，执行增删改查操作
+		提交事物(DML)
+		释放SqlSession对象资源
+	
+	
+	
+	 public  void test01(){
+        EmpDAO empDAO=new EmpDAO();
+        List<Emp> emps=empDAO.findAll();
+        for (Emp emp:emps){
+            System.out.println(emp.getEname()+":"+emp.getSalary());
+        }
+    }
+	
+	
+	返回Map类型查询结果
+	
+	ResultMap映射定义
+		在映射文件定义<select>操作时，如果查询结果集字段名和实体类的属性不一致，
+		则需要使用<resultMap>元素显示指定映射关系
+		
+		注意：不一致问题，如果结果集的字段名和实体类的属性名全部不一致，且在结果
+		映射时定义为resultType则不会创建实体对象，但是如果只是部分不一致，则会创建对象
+	
+	
+	
+Mapper映射器
+	Mapper映射器是开发者创建绑定映射语句的接口，映射接口的实例可以从SqlSession中获得
+	
+	注意：
+		1、Mapper接口名称必须和映射文件中的namespace一致
+		2、Mapper接口中方法名必须和映射文件中SQL的ID保持一致
+		
+		
+		
+===============================================================================================
+第八天
+
+1、Spring与MyBatis的整合
+	Spring与MyBatis的整合需要引入一个mybatis-spring.jar文件包，此整合包由MyBaits提供，
+	此包提供以下与整合相关的API 
+	
+	SqlSessionFactoryBean
+		为整合应用提供SqlSession对象
+		
+	MapperFactoryBean
+		根据指定Mapper接口生成Bean实例
+	
+	MapperScannerConfigurer
+		根据指定包批量扫描Mapper接口生成对应的MapperFactoryBean
+		
+		
+	在单独使用MyBatis时，所有的操作都是围绕SqlSession展开，SqlSession通过SqlSessionFactory获取，
+	SqlSessionFactory又是通过SqlSessionFactoryBuilder构建生成
+	
+	在Spring与MyBatis整合应用时，同样需要SqlSession，mybatis-spring.jar提供一个SqlSessionFactoryBean,
+	这个组件作用就是通过SqlSessionFactoryBuilder生成SqlSessionFactory对象，为整合应用提供SqlSession对象
+	
+	SqlSessionFactoryBean在spring.xml中配置：
+		<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+			<!--指定连接资源-->
+			<!--指定映射文件-->
+		</bean>
+		
+		
+	在使用MapperFactoryBean时，有一个Mapper就需要定义一个对应的MapperFactoryBean，当Mapper比较少时可以，
+	但遇到大量Mapper时就需要使用MapperScannerConfigurer组件，通过这个组件会自动扫描各个Mapper接口，注册
+	对应的MapperFactoryBean对象
+	
+	
+	在定义MapperScannerConfigurer时，只需要指定一个basePackage即可，basePackage用于指定Mapper接口所在的包，
+	在这个包及其子包中的Mapper接口都将被扫描到，注册对应的MapperFactoryBean对象，多个包之间可以使用逗号或者
+	分号进行分割
+	
+	<bean class="">
+		<property name="basePackage" value=""/>
+		注意：SqlSessionFactory属性可以不用指定，会以Autowired方式自动注入
+	</bean>
+	
+	
+	
+	如果指定的某个包下并不完全是我们定义的Mapper接口，此时可以使用MapperScannerConfigurer的另外
+	两个属性缩小扫描和注册范围，一个是annotationClass，一个是markerInterface
+	
+	annotationClass：用于指定一个注解标记，当指定了annotationClasss注解标记时，MapperScannerConfigurer
+	将只注册使用了annotationClass注解标记的接口
+	
+	markerInterface：用于指定一个接口，当指定了markerInterface接口时，MapperScannerConfigurer将只注册
+	继承自markerInterface的接口
+	
+	
+	
+2、Spring+Spring MVC+MyBatis
+	基于Spring、Spring MVC和Mybatis整合技术开发的主要步骤：
+		
+		1）创建工程，搭建Spring MVC和JDBC技术环境
+		创建一个WEB工程
+		添加JDBC相关技术环境
+			引入数据库驱动包
+			引入DBCP连接池开发包
+		添加Spring相关技术环境
+			引入Spring IOC，web，webmvc，jdbc，tx开发包
+			在src下添加spring.xml配置文件
+			在web.xml中配置DispatcherServlet主控制器
+			在web.xml中配置中文乱码解决过滤器CharacterEncodingFilter
+				
+		2）基于JdbcTemplate实现DAO组件
+			根据数据表编写实体类
+			编写DAO组件
+			在Spring配置文件中配置JdbcTemplate组件
+			在DAO组件中，注入JdbcTemplate对象
+			
+		3）编写和配置Spring MVC主要组件
+			编写Controller和请求处理方法
+			配置<mvc:annotation-driven/>支持@RequestMapping
+			配置Controller
+				开启组件扫描，将Controller扫描到Spring容器
+				需要DAO组件时采用注入方式注入
+				在请求处理方法上使用@RequestMapping指定对应请求
+			配置ViewResolver
+
+		4）编写JSP视图组件，利用JSTL标签和EL表达式显示数据
+
+	
+===================================================================================
+第九天
+
+1、MyBatis动态SQL
+
+	动态SQL是MyBatis框架中特性之一，在一些组合查询页面需要根据用户输入的
+	查询条件生成不同的查询SQL语句，在JDBC或其他相似框架中需要在代码中拼
+	接sql，容易出错，MyBatis可以解决这种问题
+	
+	动态SQL元素与JSTL相似，它允许在xml中构建不同的sql语句
+	常用的SQL元素如下：
+		判断元素：if,choose
+		关键字元素：where,set,trim
+		循环元素：foreach
+		
+	1)if
+		if元素是简单的条件判断逻辑，如果满足指定条件时追加if元素内的sql语句，
+		反之，不追加，使用格式如下：	
+			<select>
+				sql语句1
+				<if test="条件表达式">
+					sql语句2
+				</if>
+			</select>
+			
+		if元素最常见的使用在where子句部分，根据不同情况追加不同的sql条件
+
+	2)choose
+		choose元素的作用相当于Java的switch语句，基本上跟JSTL中的choose的
+		作用和用法是一样的，通常与when和otherwise搭配使用，使用格式如下：
+			<select>
+				sql语句1
+				<choose>
+					<when test="条件表达式">
+						sql语句2
+					</when>
+					<otherwise>
+						sql语句3
+					</otherwise>
+				</choose>
+			</select>
+
+	3)where
+		where元素主要是用于简化语句中的where部分的条件判断，where元素可以
+		在<where>元素所在的位置输出一个where关键字，而且可以将后面多余的and
+		或or关键字去除，使用格式如下：
+			<select>
+				select * from emp
+				<where>
+					动态追加条件
+				</where>
+			</select>
+	4)set
+		set元素主要是用在更新操作时，它的主要功能和where元素相似，主要是在<set>元素
+		所在位置输出一个set关键字，而且还可以去除内容结尾中无关的逗号，使用格式如下：
+			<update>
+				update emp 
+				<set>
+					动态追加更新字段
+				</set>
+			</update>
+
+	5)trim
+		trim主要功能如下：
+			a、可以在自己包含的内容前加上某些前缀，也可以在其后加上某些后缀，
+				与之对应的属性是prefix和suffix
+			b、可以把包含内容首部的某些内容过滤，即忽略，也可以把尾部的某些内
+				容过滤，对应的属性是prefixOverrides和suffixOverrides
+			即trim元素可以替代where元素和set元素的功能
+			<!--等价于where-->
+				<trim prefix="where" prefixOverrides="and|or">
+					....
+				</trim>
+				
+			<!--等价于set-->
+				<trim prefix="set" suffixOverrides=",">
+					....
+				</trim>
+
+	6)foreach
+		foreach元素实现循环逻辑，可以进行一个集合的迭代，主要用在构建in条件中，
+		使用格式如下：
+			<select>
+				select * from emp where empno in(1003,1005,1007)
+			</select>
+			<select>
+				select * from emp where empno in
+				<foreach collection="集合" item="迭代变量" open="("close=")" sepqrator="">
+					#{迭代变量}
+				</foreach>
+			</select>
+			foreach元素它允许正定一个集合，声明集合项和索引变量，变量可以用在元素体内，
+			它允许指定开放和关闭字符串，在迭代项之间放置分隔符
+		备注：当列表项中存在null值时，
+				如果是逻辑判断为成立，那么结果为不成立
+
+2、MyBatis关联映射
+	1)主键映射
+		在做插入操作时，可以有Mybatis负责主键值生成主键字段部分的映射可以
+		分为两种情况：
+			数据库支持自动递增，例如MySQL、SQLServer
+			数据库不支持自动递增，例如Oracle
+			
+		自动递增：
+			MySQL、SQLServer数据库都支持主键字段自动递增功能，在设计表时，
+			可以为主键字段指定自动递增，在添加操作时，主键值数据自动生成，
+			不需要指定
+			
+			在使用Mybatis时，有时需要返回数据库自动递增的主键值，可以采用
+			以下方式定义：
+				<insert id="" parameterType="com.sdg.entity.Dept" 
+				useGeneratedKeys="true" keyProperty="deptno">
+					insert into dept(null,#{dname})
+				</insert>
+				在insert元素指定自动递增属性设置后，Mybatis会在插入操作后
+				将自动递增生成的主键值给keyProperty指定的属性赋值
+			
+			
+			Oracle基于序列生成主键的映射方式如下：
+				<insert id="" parameterType="com.sdg.entity.Dept">
+					<selectKey keyProperty="deptno">
+						select 序列名.nextval from dual
+					</selectKey>
+					insert into dept values(序列名.currval,#{dname})
+				</insert>
+				在insert元素指定<selectKey>设置后，Mybatis会在插入操作前
+				先执行<selectKey>获取主键值的sql，然后将主键值赋值给指定
+				的主键属性，最后在执行插入的sql
+				
+	2)多对一映射
+		在查询时需要获取两张或两张以上关联表数据，通过关联映射可以一个对象
+		获取关联对象的信息，例如：查询一个emp员工对象，可以通过关联映射获取
+		员工所在的部门Dept对象信息
+		
+		MyBatis的多对一有以下两种不同的实现形式：
+			a、嵌套查询：通过执行另外一个SQL映射语句来返回关联数据结果(查询两次)
+			b、嵌套结果查询：执行一个表关联查询的SQL，然后将查询结果映射成关联对
+				象(查询一次)
+
+	3)一对多映射
+		当查询某个表记录信息时，如果关联表有多条相关记录，此时就可以通过一对多映射，
+		例如，查询某个Dept部门对象信息，通过一对多映射获取此部门所有的emp员工对象信息
+	
+		MyBatis的一对多有以下两种不同的实现形式：
+			a、嵌套查询：通过执行另外一个SQL映射语句来返回关联数据结果(查询两次)
+			b、嵌套结果查询：执行一个表关联查询的SQL，然后将查询结果映射成关联对
+				象(查询一次)
+	4)鉴别器
+		有时一个单独的数据库查询有可能返回很多不同数据类型的结果集，例如：一张表
+		存储单选题和多选题，查询时需要返回单选题和多选题对象，鉴别器就是用来处理
+		此情况，鉴别器元素类似于Java语言中的switch分支语句结构
+		
+		create table question(
+			id int(4) primary key auto_increment,
+			title varchar(20),
+			options varchar(20),
+			type char(1),
+			answer varchar(10),
+			answers varchar(20)
+		);
+ insert into question values(null,'这是一道单选题','选项如下：A:,B,C,D','S','C',null);
+ insert into question values(null,'这是一道单选题','选项如下：A:,B,C,D','S','C',null);
+ insert into question values(null,'这是一道多选题','选项如下：A:,B,C,D','M',null,'ACD');
+ insert into question values(null,'这是一道多选题','选项如下：A:,B,C,D','M',null,'BC');
+
+=================================================================================================
+第十天
+	
+1、Spring对ajax的支持
+	为了便于接受和处理Ajax请求，SpringMVC提供json响应支持，可以很方便的将数据自动
+	转换成json格式字符串给客户端js响应
+	
+	在SpringMVC中，与json响应相关的注解为@ResponseBody
+	
+	@ResponseBody注解主要用于Controller组件的处理方法前，具体操作如下：
+		1)引入jackson开发包，示例代码采用的是jackson-annotation-2.4.1.jar
+			jackson-core-2.4.1.jar，jackson-databind-2.4.1.jar
+		2)在Spring配置文件中定义<mvc:annotation-driven/>开启对@ResponseBody
+			注解的支持，在Controller处理方法前定义@ResponseBody注解
+			
+		1、返回单个值
+		2、返回多个值
+		3、返回list集合
+		4、返回对象
+		5、返回对象集合
+
+
+2、Spring AOP
+	AOP为Aspect Oriented Programming的缩写，被称为面向切面编程，AOP主要用于
+	处理共通逻辑，例如日志记录，安全控制，事务管理，异常处理等等，AOP可以将
+	这些共通逻辑从普通业务逻辑代码中分离出来，这样在以后修改这些共通逻辑时就
+	不会影响普通业务逻辑
+	
+	利用AOP可以对业务逻辑的各个部分进行分离，从而使得业务逻辑各个部分之间的
+	耦合度降低，提高程序的课重用性，同时提高开发效率
+	
+	AOP，OOP在字面上虽然非常相似，但却是不同领域的两种设计思想
+		OOP(面向对象编程)针对业务处理过程中实体的属性和行为进行抽象封装，以获
+			得更加清晰高效的逻辑单元的划分
+		AOP(面向切面编程)针对业务处理过程中的切面进行提取，它面对的是处理过程
+			中的某个步骤或阶段，以获得逻辑过程中各个部分之间低耦合的隔离效果
+			
+		AOP需要以OOP为前提和基础
+
+	什么是切面？
+		切面是指封装共通处理逻辑的组件，此组件被作用到其他目标组件的方法上
+	什么是目标？
+		目标是被一个或多个切面所作用的对象
+	什么是切入点？
+		切入点是用于指定哪些目标组件的方法使用切面功能，在spring中利用一个
+		表达式指定切入点
+		
+		Spring提供以下常用的切入点表达式：
+			1)方法限定表达式
+				execution(修饰符?返回值类型 方法名(参数) throws 异常类型?)
+			2)类型限定表达式
+				within(包名.类型)
+			3)Bean名称限定表达式
+				bean("Bean的id或name属性值")
+	什么是通知？
+		通知是用于指定切面组件和目标组件作用的时机，例如，切面功能在目标方
+		法之前或之后执行等时机
+	
+		Spring框架提供以下类型的通知：
+			前置通知：先执行切面功能再执行目标功能
+			后置通知：先执行目标功能再执行切面功能(目标无异常才执行切面功能)
+			最终通知：先执行目标功能再执行切面功能(目标有无异常都执行切面功能)
+			异常通知：先执行目标功能，抛出异常后执行切面功能
+			环绕通知：先执行切面的前置部分，然后执行目标，最后执行切面的后置部分
+
+	try{
+		//前置通知
+		//环绕通知的前置部分
+		//执行目标组件
+		//环绕通知的后置部分
+		//后置通知
+	}catch(){
+		//异常通知
+	}finally{
+		//最终通知
+	}
+	
+	AOP的实现原理
+		Spring AOP实现主要是基于动态代理技术，当Spring采用AOP配置后，Spring容
+		器返回的目标对象，实质上是Spring利用动态代理技术生成的一个代理类型，
+		代理类重写了原目标组件方法的功能，在代理类中调用切面对象功能和目标对
+		象的功能
+
+	Spring框架采用两种动态代理实现：
+		1)利用cglib工具包
+			目标没有接口时采用此方法，代理类是利用继承方式生成一个目标子类
+		2)利用JDK Proxy API
+			目标有接口时采用此方法，代理类是采用实现目标接口方式生成一个目标子类
+
+3、XML配置实现AOP
+	开发步骤：
+		1)创建一个类，充当切面组件，实现共通逻辑
+		2)生命切面组件(在配置文件中)
+		3)使用切面组件，在配置文件中，将切面组件作用到目标组件方法上，
+			设置通知类型以确认切面组件调用的时机
+			
+			
+	<!-- 声明切面组件 -->
+		<bean id="aspectComponent" class="com.sdg.aspect.AspectComponent"/>
+	<!-- 声明目标组件 -->
+		<bean id="testController" class="com.sdg.controller.TestController"/>
+	<!-- 配置AOP -->
+		<aop:config>
+			<!-- 前置通知 -->
+				<aop:aspect ref="aspectComponent">
+					<aop:before method="one" pointcut="execution(public String findAll())"/>
+				</aop:aspect>
+			<!-- 后置通知 -->
+				<aop:aspect ref="aspectComponent">
+					<aop:after-returning method="two"
+					pointcut="within(com.sdg.controller.TestController)"/>
+				</aop:aspect>
+				
+			<!-- 最终通知 -->
+				<aop:aspect ref="aspectComponent">
+					<aop:after method="three" 
+					pointcut="bean(testController)"/>
+				</aop:aspect>
+				
+			<!-- 异常通知 -->
+			 	<aop:aspect ref="aspectComponent">
+					<aop:after-throwing method="four" throwing="ex"
+					pointcut="within(com.sdg.controller.*)"/>
+				</aop:aspect>
+			<!-- 环绕通知 -->
+				<aop:aspect ref="aspectComponent">
+					<aop:around method="five" pointcut="within(com.sdg.controller..*)"/>
+				</aop:aspect>	
+		</aop:config>		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+4、注解实现AOP
+	开发步骤
+	1)创建切面组件
+	2)声明切面组件
+		在配置文件中开启AOP注解扫描
+			<aop:aspectj-autoproxy/>
+		使用@Component注解标记标识这个类，将其声明为组件
+		使用@Aspect注解标识这个类，将其声明为切面组件
+	3)使用切面组件
+		在切面组件的方法上，使用注解将切面组件作用到目标组件的方法上，并设置通知类型
+		以确认切面组件调用的时机
+
+
+
+============================================================================
+第十一天
+1、Spring事务处理
+	Spring框架能够全面的事务支持，它提供一致的事务管理方式
+	
+	a、提供简单易用的编程式事务管理的API
+		使用编程式事务时，Spring提供以下两种事务管理的API：
+			1)TransactionTemplate
+			2)PlatformTransactionManager
+			如果采用编程式事务管理，推荐使用TransactionTemplate
+			TransactionTemplate与Spring中的JdbcTemplate等模板类风格相似，
+			它也是用回调机制，将事务代码和业务代码分离，便于开发者将精力
+			集中在具体的业务编程上
+		transactionTemplate.execute(new TransactionCallback(){
+			public Object doInTransaction(TransactionStatus status){
+				//调用业务操作
+				dao.update();
+				
+				return resultOfUpdate();
+			}
+		});
+		
+		如果方法不需要返回值，可以创建一个TransactionCallbackWithoutResult的匿名类
+		transactionTemplate.execute(
+			new TransactionCallbackWithoutResult(TransactionStatus status){
+				//调用业务操作
+				dao.update();
+		});
+			
+	b、支持声明式事务管理
+		Spring的声明式事务管理是通过Spring AOP实现的
+2、注解实现声明式事务
+	1)在配置文件中声明事务管理组件，开启事务注解扫描
+		<!--声明事务管理组件-->
+			<bean id="" class="">
+				<property name="dataSource" ref=""/>
+			</bean>
+		<!--开启事务注解扫描-->
+			<tx:annotation-driven transaction-manager=""/>
+		
+		transaction-manager指定事务管理器，需要根据数据库访问技术的不同选择不同的实现，
+		例如JDBC、MyBatis技术选择DataSourceTransactionManager，而Hibernate技术则选择
+		HibernateTransactionManager
+	2)使用@Transactional注解
+		@Transactional注解标记可以用在类定义前和方法定义前，方法上的事务设置将优于类级
+		别注解的事务设置
+		@Transactional注解标记有以下属性，在使用时可以根据需要做指定：
+			propagation：事务传播，默认值是propagation_require
+			isolation：事务隔离，默认值是isolation_default
+			readOnly：只读/读写，默认值是可读写
+			rollbackFor：遇到哪些异常回滚
+			noRollbackFor：遇到哪些异常不回滚
+3、XML配置实现声明式事务
+	在配置文件中声明事务管理组件，配置事务作用的范围及类型
+		<!--声明事务管理组件-->
+			<bean id="" class="">
+				<property name="dataSource" ref=""/>
+			</bean>
+		<!--XML配置声明式事务范围及类型-->
+			<tx:advice id="" transaction-manager="">
+				<tx:attributes>
+					<tx:method name="" propagation=""/>
+					<tx:method name="" read-only=""/>
+				</tx:attributes>
+			</tx:advice>
+		
+		<aop:config>
+			 aop:advisor advice-ref="" pointcut=""/>
+		</aop:config>
+		
+4、事务回滚
+	默认情况下RuntimeException异常将触发事务回滚，
+	但是任何CheckdException将不触发事务回滚
+	
+	常见的RuntimeException：
+		NullPointException：空指针异常
+		ClassCastException
+		NumberFormatException
+		IndexOutOfBoundsException
+	常见的CheckedException：
+		ClassNotFoundException
+		IOException
+		NoSuchMethodException
+		NoSuchFieldException
+		
+	对于CheckedException，需要手动指定异常类型，才能实现事务回滚
+	
+	使用注解实现声明式事务，按如下方式指定异常：
+		@Transactional(rollbackFor=ClassNotFoundException.class)
+		@Transactional(rollbackFor=*Exception.class)
+	使用XML实现声明式事务时，按如下方式指定异常：
+		<tx:method name="" rollback-for="java.lang.ClassNotFoundException"/>
+
+5、事务传播
+	是指一个方法调用另一个带有事务控制的方法，就需要指定事务传播的处理方案
+
+6、事务隔离
+	在数据库操作过程中，如果两个事务并发执行，那么彼此之间的数据会发生影响，
+	为了避免这种并发冲突，需要将两个事务隔离开 
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

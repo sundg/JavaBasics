@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+ <mapper namespace="com.sdg.dao.EmpDAO">
+    <!--查询全部员工的映射配置-->
+    <select id="findAll" resultType="com.sdg.entity.Emp">
+        select * from emp
+    </select>
+    
+    <!-- 根据员工号查询员工的映射配置 -->
+    <select id="findByEmpno" 
+    parameterType="java.lang.Integer"
+    resultType="com.sdg.entity.Emp">
+    	select * from emp where empno=#{empno}
+    </select>
+    
+    <!-- 添加员工的映射配置 -->
+    <insert id="addEmp" parameterType="com.sdg.entity.Emp">
+    	insert into emp values(#{empno},#{ename},#{salary},#{bonus},#{hiredate},#{deptno})
+    </insert>
+    
+    <!-- 修改员工的映射配置 -->
+    <update id="update" parameterType="com.sdg.entity.Emp">
+    	update emp set ename=#{ename},salary=#{salary},bonus=#{bonus},
+    	hiredate=#{hiredate},deptno=#{deptno} where empno=#{empno}
+    </update>
+    
+    <!-- 删除员工的映射配置 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+    	delete from emp where empno=#{empno}
+    </delete>
+    <!-- 根据员工号查询员工信息同时查询所在部门信息 -->
+    <select id="findEmpAndDeptByEmpno" parameterType="integer" resultType="java.util.Map">
+    	select e.*,d.* from emp e join dept d on e.deptno=d.deptno where empno=#{empno}
+    </select>
+    
+    <!-- 查询所有员工信息同时查询所在部门信息 -->
+    <select id="findEmpAndDept" resultType="java.util.Map">
+    	select e.*,d.* from emp e join dept d on e.deptno=d.deptno
+    </select>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</mapper>

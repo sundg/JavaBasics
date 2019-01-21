@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <mapper namespace="com.sdg.dao.EmpMapper">
+ 	<insert id="addEmp" parameterType="com.sdg.entity.Emp">
+ 		insert into emp values(null,#{ename},#{salary},#{bonus},#{hiredate},#{deptno})
+ 	</insert>	
+ 	
+ 	<!-- 嵌套查询，查询员工时，关联查询出对应得部门信息 -->
+ 	<select id="findEmpAndDeptByEmpnoOne" resultMap="empMapperOne" parameterType="integer">
+ 		select * from emp where empno=#{empno}
+ 	</select>
+ 	<resultMap type="com.sdg.entity.Emp" id="empMapperOne">
+ 		<association property="dept" column="deptno" 
+ 			select="findByDeptno" javaType="com.sdg.entity.Dept"/>
+ 	</resultMap>
+ 	<select id="findByDeptno" resultType="com.sdg.entity.Dept" 
+ 		parameterType="integer">
+ 		select * from dept where deptno=#{deptno}
+ 	</select>
+ 	
+ 	
+ 	
+ 	<!-- 嵌套结果查询 -->
+ 	<select id="findEmpAndDeptByEmpnoTwo" resultMap="empMapperTwo" parameterType="integer">
+ 		select e.*,d.* from emp e join dept d on e.deptno=d.deptno
+ 		where e.empno=#{empno}
+ 	</select>
+ 	<resultMap type="com.sdg.entity.Emp" id="empMapperTwo">
+ 		<id property="empno" column="empno"/>
+ 		<result property="ename" column="ename"/>
+ 		<result property="salary" column="salary"/>
+ 		<result property="bonus" column="bonus"/>
+ 		<result property="hiredate" column="hiredate"/>
+ 		<result property="deptno" column="deptno"/>
+ 		<association property="dept" column="deptno" 
+ 		javaType="com.sdg.entity.Dept">
+ 			<id property="deptno" column="deptno"/>
+ 			<id property="dname" column="dname"/>
+ 			<id property="dloc" column="dloc"/>
+ 		</association>
+ 	</resultMap>
+ </mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	

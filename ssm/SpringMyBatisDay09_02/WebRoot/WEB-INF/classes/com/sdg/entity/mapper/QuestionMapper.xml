@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <mapper namespace="com.sdg.dao.QuestionMapper">
+ 	<select id="findAll" resultMap="question">
+ 		select * from question;
+ 	</select>
+ 	
+ 	<resultMap type="com.sdg.entity.Question" id="question">
+ 		<id property="id" column="id"/>
+ 		<result property="title" column="title"/>
+ 		<result property="options" column="options"/>
+ 		<!-- 鉴别器 -->
+ 		<discriminator javaType="java.lang.String" column="type">
+ 			<case value="S" resultType="com.sdg.entity.SingleQuestion">
+ 				<result property="answer" column="answer"/>
+ 			</case>
+ 			<case value="M" resultType="com.sdg.entity.MutilQuestion">
+ 				<result property="answers" column="answers"/>
+ 			</case>
+ 		</discriminator>
+ 	</resultMap>
+ </mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	

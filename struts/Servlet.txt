@@ -1,0 +1,1145 @@
+第一天
+
+Servlet/Jsp 11天
+ajax       3天
+structs2   5天
+1、B/S
+	客户端采用标准的浏览器，服务器端采用的是标准的web服务器，
+	客户端与服务器端进行通讯时采用的是标准的http协议
+	优势：
+		编程相对于C/S更简单
+		当版本升级时，用户不需要手动更新
+2、什么是servlet
+	sun公司制定的一种用于扩展web服务器功能的组件规范
+	为什么扩展web服务器功能？
+		早期的web服务器只能处理静态的资源文件，
+		不能处理动态(需要经过计算生成的页面)资源文件，因此需要扩展
+	扩展方式？
+		组件+容器
+		组件---java类
+			符合规范，实现特定功能的软件模块。(程序员编写)
+		容器
+			符合规范，给组件提供运行环境并且可以管理组件生命周期的软件程序
+		组件依赖于容器，不能独立运行，但不依赖于特定的容器
+		
+		优势：
+			容器负责大量的基础服务(浏览器与服务器的通讯，参数的传递等)，
+			而组件负责编写具体的业务逻辑模块
+3、容器
+	tomcat
+	启动容器：startup.bat
+	关闭容器：shutdown.bat
+	访问容器：localhost:8080或127.0.0.1:8080
+		localhost:主机名
+		127.0.0.1：主机ip地址
+		8080：tomcat服务器的端口号
+	windows环境下：
+		查看端口号8080对应的进程号
+			netstat -ano|findstr 8080
+		关闭进程：
+			taskkill /pid 进程号 /f
+	linux环境下：
+		netstat -anp|grep 8080
+		kill -9
+4、如何写一个Servlet
+	step 1、先定义一个java类，继承父类HttpServlet
+	step 2、重写service方法
+	step 3、配置servlet
+5、常见错误
+	405--->service方法签名写错
+	404--->访问地址写错
+		localhost:8080--->服务是否启动成功
+		localhost:8080/servlet01--->应用是否部署成功
+		localhost:8080/servlet01/sayhello--->检查url-pattern配置
+	500--->程序写错或者servlet-class配置的类路径写错
+6、servlet运行原理
+	1)根据IP:端口号与服务器建立连接
+	2)浏览器的通讯模块根据http协议将数据打包(比如请求资源路径/servlet01/sayhello)
+	3)浏览器向服务器发请求
+	4)容器创建请求对象(request)与响应对象(response)
+	5)服务器的通讯模块根据http协议将数据拆包，拆包之后的数据存放到了requset当中
+	6)容器会实例化servlet，并调用该对象的service方法，在service方法当中，处理数据
+	7)处理之后的数据写到了response响应对象当中
+	8)服务器的通讯模块将响应的数据根据http协议打包
+	9)服务器向浏览器发送响应
+	10)浏览器的通讯模块根据http协议将数据拆包，并根据服务器返回的数据生成新的界面
+7、get请求与post请求
+	get请求：
+		<a href="...">链接</a>
+		在浏览器地址栏输入url地址访问
+		<form method="get"><form>
+	post请求：
+		<form method="post"><form>
+8、如何获取ulr地址中的请求参数值
+	http://172.21.18.154:8080/servlet/sayHello?name=zhangsan
+	情况一：参数名唯一
+		String str=request.getParameter(String 参数名);
+	注意：
+		参数名若不一致，返回的是null
+	情况二：参数不唯一
+		String[] str=request.getParameterValues(String 参数名);
+	--如何获取正确的中文参数值
+		request.setCharacterEncoding("utf-8");
+		该方法只对post请求有用，若请求方式为get，需要修改tomcat的server.xml文件，
+		在该文件的69行添加设置 URIEncoding="utf-8"
+	注意：	
+		server.xml文件修改之后，一定要重启服务器才会生效
+	
+	--servlet如何正确输出中文
+		response.setContentType("text/html;charset=utf-8");
+	
+练习：
+	写一个DateServlet，输出now：2017-09-29
+		localhost:8080/servlet01/date
+	
+	
+9、mysql语法
+	1)创建库
+		create database jsd1707 default character set utf8;
+	
+	2)查看库
+		show databases;
+	3)使用库
+		use 库名;
+	4)创建表
+		create table emp(
+			id int(4) primary key auto_increment,
+			name varchar(20),
+			age int(4),
+			salary double(7,2)
+		);
+		primary key:主键，唯一，不为空
+		auto_increment:自增长
+	5)插入
+		insert into emp values(null,"jack",20,1000);
+		insert into emp(name,age,salary) values('rose',23,2000);
+	
+	6)set names gbk;
+	
+==========================================================================
+	
+第二天
+1、HTTP协议
+	hypertext transfer protocol 定义了浏览器与服务器的通讯过程与数据格式
+	
+	通讯过程
+		step 1、浏览器与服务器建立连接
+		step 2、打包，发送请求
+		step 3、打包，发送响应
+		step 4、服务器关闭连接
+		
+		特点：
+			效率高，可以使用有限的资源为更多的用户服务。
+			当再次发送请求时，需要重新建立连接。
+		
+	数据格式
+		请求数据包
+			--请求行
+				请求方式：get/post
+				请求资源路径：/servlet/sayHello...
+				协议类型版本：HTTP 1.1
+			--若干消息头
+				由一系列的键值对组成，由浏览器自动生成，遵循w3c规范，包含特定含义，
+				比如通过user-agent可以获取浏览器的类型信息
+			--实体内容
+				如果请求方式是get，实体内容无数据
+				如果请求方式是post，实体内容中存放的是参数名与参数值
+		响应数据包
+			--响应行
+				协议的类型及版本
+				响应的状态码： 200
+				状态码描述信息：ok
+			--若干消息头
+				由一系列的键值对组成，由服务器自动生成，遵循w3c规范，包含特定含义，
+				比如content-type,可以通过编程设置其数据
+			--实体内容
+				服务器处理之后的数据
+	
+2、get请求与post请求的区别
+	a、如果是get请求，请求参数跟在url地址之后，而浏览器对请求数据有大小的限制，
+		不同的浏览器限制的大小不一样，大约是2k-8k之间，为了兼容所有浏览器，
+		最好不要超过2k；而post请求，参数是放在实体内容当中，理论上没有大小限制
+	b、post请求相对于get更安全。但是post也不是绝对的安全，对于敏感的数据，建议加密。
+	
+3、重定向
+	什么是重定向？
+		服务器向浏览器发送一个302状态码以及一个location的消息头(location=url地址)，
+		当浏览器接收到响应之后，会立即向location指向的地址发请求
+	如何重定向？
+		response.sendRedirecte(String url地址);
+	注意点：
+		a、重定向之前不能调用out.close()或者out.flush()方法
+		b、重定向之前会清空response响应对象中的缓存数据
+	特点：
+		a、重定向的地址是任意的
+		b、重定向之后，浏览器地址栏的地址会发生改变
+	
+========================================================================================================================
+第三天
+	
+1、DAO(data access object)
+	是一个数据访问层模块，封装了数据访问的细节，当底层细节发生改变时，不会影响调用者。
+	优势：提升了代码的扩展性，方便后期维护
+	
+	如何定义一个DAO？
+		step1：定义实体类Emp
+			实体类当中定义与表字段相同类型的成员变量，并提供get/set方法
+		step2.定义DAO接口
+			方法的声明不要涉及到任何具体的技术
+			根据业务需求定义方法
+			例如:List<Emp> findAll() throws Exception;
+		step3.定义实现类
+			使用具体的技术重写接口中的方法
+
+2.工厂设计模式
+  所谓设计模式,是为了解决一类相同或相似的问题而提出的解决方案,并为其命名.
+  
+  工厂设计模式:提供一个符合接口要求的对象
+  
+  优势:封装了对象创建的细节,当细节发生改变时,不会影响调用者
+=====================================================================================================
+
+第四天
+
+1.Servlet如何处理请求资源路径
+  localhost:8080/appname/sayHello?name=zs
+  请求资源路径是端口号之后的内容
+  appname/sayHello?name=zs
+ 
+  如何处理?
+	容器会根据应用名去tomcat/webapps目录下查找对应的文件夹,
+	如果找到,容器会假设访问的是Servlet,并且与web.xml文件中
+	的url-pattern匹配,如果匹配成功,调用相应的Servlet,如果匹
+	配失败,容器会认为访问的是静态资源文件,根据路径查找该文件,
+	如果找到,返回,如果未找到,返回404.
+  
+  匹配规则:
+  --精确匹配
+    以"/"开头,比如/list
+    完全比配,区分大小写
+  --用佩服匹配
+    以"/"开头,比如/* 或者 /abc/*
+    *:任意长度的任意字符
+  --后缀匹配
+    不能以"/"开头,以 .do .action等等结尾
+    比如:*.do
+
+2.一个Servlet如何处理多个请求资源路径
+  list.do del.do...
+  step1.采用后缀匹配模式
+  step2.分支判断请求地址
+        String:request.getRequestURI();
+
+3、servlet生命周期
+	所谓生命周期指的是容器如何实例化servlet对象，如何为其分配资源，
+	如何调用service方法，如何销毁该对象的整个过程。
+	
+	阶段一：实例化
+		默认情况下，当请求到达容器时，容器会检查内存中是否有该servlet对象，
+		如果没有，则创建对象，如果有，不创建。
+		可以通过<load-on-startup></load-on-startup>配置改变实例化的时机，
+		配置的参数值>=0整数，数值越小，优先级越高。
+		--在容器启动或者重新部署时，实例化servlet对象
+	阶段二：初始化
+		 容器调用init(ServletConfig config)方法，在init方法中，
+		 可以做初始化工作，比如读取文件的配置信息。
+		 通过ServletConfig可以获取web.xml文件中配置的初始化参数值
+	阶段三：就绪
+		容器调用service方法，底层容器会根据请求方式调用doGet()
+		或者doPost()，作为子类，可以重写service方法，也可以重
+		写doGet()或者doPost()
+		建议重写service
+	阶段四：销毁
+		容器根据自身的算法在销毁servlet之前会调用destroy方法
+	总结：
+		在servlet生命周期整个过程当中，init()与destroy()只会被调用一次，
+		service()会被执行多次
+4、servlet相关的借口与抽象类
+	--Servlet接口
+		init(ServletConfig config);
+		service(ServletRequest req,ServletResponse res);
+		destroy();
+	--GenericServlet抽象类,实现Servlet接口
+		init(ServletConfig config);
+		destroy();
+	--HttpServlet抽象类,继承GenericServlet
+		service(HttpServletRequest req,HttpServletResponse res);
+	
+	
+
+JSP
+	java server page
+	sun公司制定的一种用于服务器端生成动态页面的技术规范
+	
+	如何写一个jsp
+		step1、定义一个文件，以.jsp结尾
+		step2、编写HTML+css+jsp
+		step3、编写java代码
+
+====================================================================================	
+	
+第五天
+1、jsp组成
+	a、html+css+js
+	b、java代码块<% %>
+	c、jsp表达式<%= %>
+2、jsp指令
+	定义：
+		jsp引擎(容器当中负责将jsp转成java文件，并做一些辅助支持的模块)将jsp文件转成java文件时做的一些额外的处理
+	语法：
+		<%@指令名 属性名=属性值%>
+			page：
+				pageEncoding-->设置当前jsp页面的编码格式
+				import--->导包
+				contentType--->res.setContentType("");
+3、隐含对象
+	在jsp页面当中不需要声明和赋值就可以直接使用的对象，比如：out
+	1、out
+	2、request
+	3、response
+	4、session
+	
+4、转发
+	一个web组件将未完成的事情交给另外一个web组件负责。通常情况是servlet组件负责获取数据，jsp组件负责展示数据
+	
+	如何转发？
+		step1、在requset上绑定数据
+			request.setAttribute(String str,Object obj)
+				str--->绑定名
+				obj--->绑定值
+			-->根据绑定名查找数据,如果绑定名写错，返回null
+			Object obj=request.getAttribute(String str)
+		step2、获得转发器
+			request.getRequestDispatcher(String url)
+				url--->转发的目的地
+		step3、转发
+			forward(request,response);
+	特点：
+		1、转发只能在同一应用内部
+		2、转发之后浏览器地址栏的地址不会发生改变
+		3、转发之间涉及到的组件共享请求与响应对象
+	
+	编程注意点：
+		1、转发之前不能调用out.close()或者out.flush()方法
+		2、转发之前，会清空response对象中的缓存数据
+	
+	
+5、include指令
+	对于多个页面中共通的部分可以提出来写到一个单独的jsp页面中，
+	再通过include指令引入。如此可以实现代码优化，方便后期维护
+	语法：
+		<%@include file="目标文件路径" %>
+6、路径的写法
+	<a href=""></a>
+	<form action=""></form>
+	response.sendRedirecte(url);
+	request.getRequestDispatcher(url);
+	
+	相对路径
+		不以"/"开头的路径，比如<a href="del.do"></a>
+		相对于当前路径
+	
+	绝对路径
+		以"/"开头的路径
+	
+	注：
+		链接、表单、重定向在写绝对路径时，是从应用名开始写，而转发是从应用名之后开始写
+		建议：
+			在真实的开发环境当中，采用绝对路径的写法
+注册
+	收集用户在注册表单中输入的数据，并保存到数据库中，在保存之前，判断用户名是否占用，如果占用，
+	提示用户，反之，将数据入库，注册信息保存到库中之后，重定向到登录页面
+	
+	step1、定义实体类User
+	step2、定义接口UserDAO
+			//判断用户名是否占用
+			User findByUserName(String username);
+			void save(User user) throws Exception;
+	step3、实现类UserDAOImpl
+			User user=null;
+			if(rs.next()){
+				user=new User();
+			}
+	step4、ActionServlet
+			调用DAO的findByUsername
+				如果返回null--->用户名可用--->save--->重定向
+				如果返回的是地址值--->被占用--->转发到注册页面--->提示用户
+	step5、regist.jsp
+	
+===========================================================================
+
+第六天
+
+1、转发与重定向的区别
+	(1)转发之后浏览器地址栏的地址不会发生改变，而重定向会发生改变
+	(2)转发的地址只能是同一应用内部，不能跨应用，也不能跨服务，而重定向的地址是任意的
+	(3)转发之间的组件共享同一个请求与响应对象，而重定向不能共享
+	(4)转发是一件事情未做完交给另外一个组件继续完成，而重定向是一件事情已经做完，
+		通知另外一个组件做另外的一件事
+	
+2、让容器处理异常
+	step1、将异常信息抛给容器throw e;
+			如：throw new ServletException(e);
+	step2、通知容器在发生异常时跳转到指定的错误页面
+		<error-page>
+			<!--  <error-code>500</error-code>-->
+			<exception-type>javax.servlet.ServletException</exception-type>
+			<location>/error.jsp</location>
+		</error-page>
+3、状态管理
+	将浏览器与服务器的多次交互看做一个整体，把多次交
+	互过程当中所涉及到的数据保存下来，就是状态管理
+	状态：数据
+	管理：保存
+	
+	如何管理？
+		第一种：将数据保存在客户端 cookie
+		第二种：将数据保存在服务器端 session
+	
+	什么是cookie？
+		浏览器向服务器发请求，服务器会将少量的数据以set-cookie消息头的方式发送给浏览器，
+		浏览器会将其保存下来，当再次向服务器发请求时，会将数据以cookie消息头的方式发送
+		给服务器，通过这种方式，可以达到状态管理的目的
+	
+	如何创建cookie？
+		Cookie c=new Cookie(String name,String value);
+			name:cookie的名字
+			value:cookie的值
+		response.addCookie(c);
+	查找cookie
+		Cookie[] cs=requset.getCookies();
+		String  name=cookie.getName();
+		String value=cookie.getValue();	
+
+	练习：	
+		写一个Find_AddCookieServlet,查找名叫city的cookie，
+		如果找到，输出value的值，反之，创建cookie(city=nj)
+	cookie如何保存中文
+		cookie在默认情况下，只能保存合法的ascii字符串
+		编码：URLEncoder.encode(String str,String bm);
+			str:将显示的内容
+			bm:编码格式
+		将中文转成对应编码格式的字节，再将字节转成ascii字符串
+		解码：URLDecoder.decode(String str,String bm);
+	
+	cookie的保存时间
+		默认情况下，浏览器会将cookie的数据保存在内存(操作系统为浏览器进程分配一块空间)中，
+		当浏览器关闭时，内存资源被释放，cookie数据随之消失。
+		可以通过setMaxAge(int seconds)改变cookie的保存时间。
+			单位：s
+			情况一：seconds<0
+				默认情况，只要浏览器不关闭，cookie数据则一直存在
+			情况二：seconds>0
+				cookie的数据是以文件的形式保存在硬盘中，当超过指定时间，会被删除
+			情况三：seconds=0
+				立即删除
+	
+	cookie的保存路径
+		浏览器在向服务器发请求时，服务器会先比较访问组件的路径与cookie的路径，
+		如果匹配，才会将cookie返回
+		匹配规则：
+			访问组件的路径需要与cookie的路径相等或者是其子路径
+		
+		可以改变cookie的默认路径：
+			cookie.setPath("/应用名");
+	
+	cookie的限制(缺点)
+		(1)cookie可以被用户禁止
+		(2)cookie保存的数据量大小有限制(4k左右)
+		(3)浏览器对cookie的保存数量有限制
+		(4)cookie只能保存字符串
+		(5)不安全
+		
+写一个CookieUtil工具类
+	//添加cookie
+	//查找cookie
+	//删除cookie
+	
+======================================================================
+======================================================================
+
+第七天
+
+1、session
+	浏览器向服务器发请求，服务器创建session对象，可以在session对象中绑定数据，
+	服务器向浏览器发送响应时，会将sessionId以set-cookie消息头的方式发送给浏览器，
+	浏览器将session保存在内存中，当浏览器再次发送请求时，会将sessionId以cookie消
+	息头的方式发送给服务器，服务器端根据sessionId可以查找到之前的session对象，
+	从而获取session中绑定的数据
+	
+	如何获得session？
+	方式一：
+		HttpSession session = request.getSession(boolean flag);
+			flag=true
+				浏览器向服务器发送请求，服务器会先查看请求数据包中是否包含sessionId，
+				如果没有sessionId，则创建新的session对象，如果有sessionId，根据
+				sessionId的值在服务器端查找对应得session对象，如果找到，
+				返回该session对象，反之，创建新的session对象
+			flag=false
+				浏览器向服务器发送请求，服务器会先查看请求数据包中是否包含sessionId，
+				如果没有sessionId，则返回null，如果有sessionId，根据
+				sessionId的值在服务器端查找对应得session对象，如果找到，
+				返回该session对象，反之，创建返回null
+	方式二：
+		HttpSession session = request.getSession();
+		等同于flag=true的情况
+		
+	HttpSession接口的相关方法：
+		String session=session.getId();//获取sessionId
+		session.setAttribute(String name,Object obj);
+			name:绑定名
+			obj:绑定值
+			建议：在session上绑定对象时实现序列化操作
+		Object obj=session.getAttribute(String name);
+			如果绑定名写错，返回null
+	session的超时
+		默认情况下，session的超时时间是30分钟，即在30分钟之内，为使用session对象，服务器会将其删除
+		可以修改session的超时时间：
+			方式一：
+				修改tomcat/conf/web.xml文件中session-timeout的配置参数，单位是分钟
+			方式二：
+				在某个应用下的web.xml文件中添加以下配置
+				<session-config>
+					<session-timeout>30</session-timeout>
+				</session-config>
+			方式三：
+				通过编程方式修改
+				session.setMaxInactiveinterval(int seconds);
+	session的删除
+		session.invalidate();//将session对象中的数据清空
+		
+	session的验证
+		可以保护一些需要登录之后才能访问的页面，
+		从而防止在浏览器地址栏中直接输入地址访问受保护的页面
+		
+		step1、在登录成功之后，将用户的信息绑定到session上
+		step2、访问受保护的页面时，先从session当中获取用户的信息
+	F6往下
+	F8停止
+	
+	
+	
+2、购物车
+	查看列表
+	step1、设计表
+		create table computer(
+			id int(4) primary key auto_increment,
+			model varchar(20),
+			pic varchar(20),
+			proDesc text,
+			price double
+		);
+		
+		insert into computer value2(null,'x200','x200.jpg','价格便宜',2000);
+		insert into computer value2(null,'x500','x500.jpg','性价比不错',5000);
+		insert into computer value2(null,'x600','x600.jpg','适合玩游戏',6000);
+	step2、实体类
+	step3、ComputerDAO
+		List<Computer> findAll() throws Exception;
+	step4、ComputerDAOImpl重写findAll()
+	step5、ActionServlet
+		调用DAO的findAll()获取数据，转发给computerList.jsp,由其遍历展示出来
+	step6、computerList.jsp
+	
+	
+=====================================================================================
+=====================================================================================
+
+第八天
+
+<a href="list.do?id=1"
+	onclick="location.href='list.do'"></a>
+	
+	1、页面刷新
+	2、地址中是否需要通过脚本获取参数值
+
+
+<a href="javascript:;" 
+	onclick="this.href='modify.dp?id=<%=item.getC().getId() %>
+			&qty='+document.getElementById('num<%=item.getC().getId() %>').value">更改数量</a>	
+	
+1、cookie与session的区别
+	cookie：是将数据保存在客户端的一种技术
+	session：是将数据保存在服务器端的技术
+	优势：
+		a、session保存的数据相对于cookie更安全
+		b、session保存的数据类型更宽泛
+		c、session保存的数据量更大
+	缺点：
+		a、sessionId保存在浏览器对应的内存中，当浏览器关闭，session中保存的数据消失
+		b、服务器会为每一个用户分配一个session对象，对服务器的资源消耗较大，
+			而cookie的数据保存在客户端，理论上对服务器没有压力
+			
+			
+			
+======================================================================================
+======================================================================================			
+1、URL重写
+	为什么要重写
+		session的id是依赖于cookie的机制保存在内存中，而cookie是可以被用户禁止的，
+		因此如果用户禁止了cookie，如何继续使用session
+	如何重写URL
+		链接、表单：response.encodeURL(url);
+			<form action="<%=response.encodeURL("count")%>">
+			</form>
+		重定向：response.encodeRedirectURL(url);(可以跨域)
+			response.sendRedirect(response.encodeRedirectURL("other"));
+		转发：不需要
+		通过编程的方式跟踪sessionId
+	
+2、servlet线程安全问题
+	产生原因？
+		浏览器向servlet发请求时，容器会启动一个线程去处理该请求，倘若在该service方法中
+		需要修改某一个成员变量的值，就有可能会发生线程安全问题
+	解决方案：
+		a、加锁，可以在方法体上加锁，也可以在代码块中加锁，建议选择后者
+		b、给servlet实现一个接口SingleThreadModel
+		c、在servlet中尽量不要设置成员变量
+	
+3、过滤器
+	对于多个web组件如果有共通的功能需要实现，可以放在filter中完成，
+	如此，可以方便代码的后期维护
+	
+	如何写一个过滤器
+		step1、定义一个java类，实现Filter接口
+		step2、重写父类方法
+		step3、在web.xml文件中配置
+	练习：
+		追加一个过滤器CommentFilter2
+		判断评论的长度是否大于20，如果大于20，提示用户评论内容不能超过20
+		分析：
+			在多个过滤器同事存在时，执行的先后顺序
+	
+	注：	
+		当多个过滤器满足过滤要求的时候，过滤器执行顺序与mapping的配置顺序有关
+		
+		Filter中可以配置初始化参数
+			<init-param></init-param>
+			通过FilterConfig.getInitParameter("参数名");
+			在init(FilterConfig config)的config对象，如何在doFilter()使用？
+				解决方案：
+					在当前类中定义相同类型的成员变量，并在使用该成员变量之前给其赋值
+	优势：	
+		a、可以实现代码优化，方便后期维护
+		b、可"插拔性"比较好，使用过滤器添加或减少某一个功能时，不会对之前的功能造成影响
+	
+	
+4、监听器
+	什么是监听器？
+		servlet规范中定义的一个特殊的类，用来监听一些事件对象
+		第一大类:
+			与生命周期相关
+			容器创建或者销毁了request/session/servletContext对象
+		第二大类：
+			与绑定事件相关
+			调用了request/session/servletContext对象的setAttribute或者removeAttribute方法
+	
+	如何定义监听器？
+		step1、定义一个java类，实现一个特定的接口
+		step2、重写父类方法
+		step3、配置监听器
+	
+	
+	
+	
+	
+	
+	servletContext对象
+	上下文对象，容器会为每一个应用创建一个唯一的上下文对象，
+	该对象会一直存在，除非应用被移除或者容器被关闭。
+	
+	request:一次请求，一次响应期间
+	session:一次回话期间(多次交互)
+	servletContext:一直存在，除非应用被移除或者容器被关闭。
+	
+	注意：	
+		如果这三个对象都满足绑定数据需求，建议选择生命周期较短的一个
+	如何获取servletContext对象？
+		a、通过GenericServlet提供的getServletContext()方法获得
+		b、通过HttpSession提供的getServletContext()方法获取
+		c、通过ServletConfig提供的getServletContext()方法获取
+	常用的方法：
+		a、绑定数据
+			setAttribute(String name,Object obj)
+			Object obj=getAttribute(String name);
+		b、获取全局初始化参数值
+			getInitParameter(String name)
+		c、根据逻辑路径获取物理路径
+			getRealPath(String url)
+	
+5、上传文件
+	step1、form中的method必须设置为post，enctype="multipart/form-data"
+	step2、不能够通过request.getParameter()获取数据，
+			需要通过request.getInputstream()获取流信息，再分析流获取参数值，
+			直接分析流比较复杂，一般会借助于工具包帮助我们分析
+====================================================================================
+====================================================================================
+
+第十天
+
+1、JSP
+	服务器端生成动态页面的技术规范
+	
+	jsp组成？
+		html+css+js
+		<%java代码块%>
+		<%=jsp表达式%>
+		<%!jsp声明%>====>声明成员变量与方法
+	jsp执行？
+		step1、容器会将jsp转成对应的java文件(就是一个servlet)
+				html+css+js--->在servlet方法体中通过out.write()输出
+				<%%>--->在service方法中照搬
+				<%= %>---->在service方法中，通过out.print()输出
+				<%!%>--->在java文件中，添加了新的成员变量或者添加了新的方法定义
+		step2、容器负责实例化、初始化、就绪、销毁的调用
+	jsp的指令？
+		page指令
+			pageEncoding：设置编码格式
+			contentType：模拟响应消息头
+			import：导包
+			session：true(缺省值)/false
+			isErrorPage：true/false(缺省值)
+			errorPage：指定一个错误页面
+			
+		include指令
+			file：需要引入文件的路径
+		taglib指令
+		
+	jsp隐含对象
+		out   request response  session  application  
+		exception  page  pageContext  config
+		exception:只有当isErrorPage="true"才可以使用，
+				  容器会将jsp页面的异常信息封装到exception中，
+				  通过getMessage()获取异常信息
+		page:jsp实例
+		pageContext：页面上下文对象，容器会为每一个jsp页面创建
+					 一个pageContext对象，该对象会一直存在，除非jsp实例被销毁
+				作用：
+					1、绑定数据
+						setAttribute(String name,Object obj)
+					  取数据
+						Object obj=getAttribute(String name)
+					2、通过pageContext可以获取其他8个隐含对象
+		config：类似于servletConfig对象，可以获取参数值
+		
+	注释符
+		<!--注释内容-->   ===》页面不显示，底层会运行
+		<%--注释内容--%>  ===》页面不显示，底层也不会运行
+
+servlet回顾：
+	1、什么是servlet
+	2、什么是容器
+	3、如何写一个servlet
+	4、servlet生命周期
+	5、如何在后台获取页面上的参数
+	6、什么是重定向
+	7、什么是转发
+	8、重定向与转发的区别
+	9、状态管理
+		session
+		cookie
+	10、过滤器的应用场景？如何写一个过滤器？
+	11、监听器的应用场景？如何写一个监听器？
+	12、servlet线程安全问题
+	13、如何URL重写
+	14、页面与后台的数据如何交互
+	15、多个交互的过程中，数据如何传递
+	16、静态include与动态include的区别
+			动态的：<jsp:include page=""></jsp:include>
+			加载的时间不同
+	17、DAO的写法？为什么要将数据的处理封装在DAO中？
+	18、工厂模式？单例模式
+
+
+2、jstl标签
+	jsp标签：使用jsp标签可以替换jsp页面中的java代码，方便后期维护
+	jstl标签：java standard tablib
+		sun公司只提供了jsp标签规范，但是没有提供一套具体的标签库，
+		Apache组织根据标签规范开发了一套标签，无偿捐献给了sun，sun改名为jstl
+	EL表达式
+		可以用来给标签的属性赋值，也可以在页面上直接输出
+		a、访问bean的属性
+			语法：
+				${el表达式}
+			写法：
+				a、${user.name}
+					容器会根据绑定名user依次从pageContext/request/session/application四个对象中
+					查找绑定的数据，如果找到，返回该数据，如果未找到，继续向下查找。根据找到的对
+					象，调用相应的get****()获取属性值
+					注：
+						可以指定查找范围，pageScope、requestScope、sessionScope，applicationScope
+				b、${user["name"]}
+					优势：	
+						1、[]中可以写下标
+						2、[]中可以写绑定名，如果[]中的数据未加"",那么容器会认为给的是绑定名
+		b、获取参数值
+			localhost:8080/appname/el01.jsp?name=zs&city=nj&city=sz
+			参数名唯一：
+				${param.name}
+			参数名有多个相同：
+				${paramValues.city}
+		c、常规计算
+			--算术运算 +-*/ %
+			--关系运算 > >= < <=...
+			--逻辑运算 && || !
+			empty运算
+				在以下四种情况下返回true：
+					1、绑定名写错
+					2、绑定值是""
+					3、绑定值是null
+					4、绑定值是list，但list中元素长度为0
+
+	jstl标签
+		step1、引入jar包，jstl.jar,standard.jar
+		step2、在jsp页面中通过taglib指令引入标签库<%@taglib uri="" prefix=""%>
+		step3、在jsp中使用jstl标签<c:if></c:if>
+			判断标签：
+				<c:if test="" var="" scope="">
+					标签体
+				</c:if>
+				
+				test:true/false,如果返回的是true，执行标签体，如果返回fasle，则不执行
+				var：指定一个绑定名，绑定值就是test属性返回的数据
+				scope：指定绑定范围{pageContext,request,session,application}
+			分支结构标签
+				<c:choose>
+					<c:when test=""></c:when>
+					<c:otherwise></c:otherwise>
+				</c:choose>
+				
+				choose标签中：when标签至少出现一次，otherwise最多出现一次
+				
+				test：true/false，如果返回true，执行when标签体，如果为false，
+					  继续往下判断，如果没有条件返回true，则执行otherwise中的标签体
+			循环标签：
+				<c:forEach items="" var="" varStatus="">
+					循环体
+				</c:forEach>
+				
+				items:指定需要遍历的集合
+				var：指定一个绑定名，绑定值是每次遍历的元素，
+					 默认情况下绑定在pageContext上
+				varStatus:指定一个绑定名，值是一个java对象，封装遍历的数据，
+						  比如遍历次数(count)或者遍历的下标(index)等等
+					
+
+		j2ee   1.4---->servlet  2.4---->tomcat5
+		javaEE 5.0---->servlet  2.5----->tomcat6--->不需要引入jstl的jar包
+
+	自定义标签：
+		step1、定义一个java类，继承SimpleTagSupport
+		step2、重写toTag()
+		step3、定义tld描述文件，可以放在WEB-INF目录下，也可以放在META-INF目录下
+			<body-content>:定义标签是否有标签体
+					empty：没有标签体
+					JSP：有标签体，标签体中可以出现java代码<%%><%=%><%!%>
+					scriptless:有标签体，但不允许出现java代码
+					
+					
+==================================================================================
+==================================================================================
+
+第十一天
+
+ajax
+	ascychronous javascript and xml(异步的js与xml)
+	是一种锦上添花的技术，实质上是利用浏览器内置的对象(ajax对象，类型是XMLHttpRequest)向
+	服务器发送异步(ajax对象在向服务器发送请求时，不会打断用户的其他操作)的请求，ajax对象
+	根据服务器返回的数据局部更新页面，整个过程当中，页面无刷新
+如何获得ajax对象？BOM对象 DOM对象
+	区分浏览器
+		var xhr=null;
+		if(window.XMLHttpRequest){
+			//非低版本的IE
+			xhr=new XMLHttpRequest();
+		}else{
+			xhr=new ActiveXObject("Microsoft.XMLHttp");
+		}
+	相关属性：
+		onreadystatechange：给ajax对象绑定一个事件函数
+		readyState：ajax对象与服务器的通讯状态
+			0：(未初始化)对象已经创建，open方法还未调用
+			1：(已经初始化)open方法已经调用
+			2：(发请求)send方法已被3调用
+			3：发送数据，ajax对象已经接受了服务器返回的部分数据
+			4：ajax接受了服务器返回的全部数据
+		responseText：服务器返回的数据类型是文本
+		responseXML：服务器返回的数据类型是xml
+		status：服务器返回的状态码(200 404 500 302...)
+	通过ajax对象向服务器发送请求
+		step1、先获取ajax对象
+		step2、初始化
+				xhr.open("get/post","url",true/false);
+				参数1：请求类型get/post
+				参数2：请求地址"check?username=zs"
+					注：
+						如果是get请求，请求参数跟在请求地址后
+						如果是post请求，请求参数通过send方法传递
+				参数3：请求方式
+						true:异步请求
+							服务器响应回来之前用户可以继续其他操作
+						false：同步请求
+							如果服务器响应的时间较长，浏览器的页面会出现锁死的状态
+				注意：如果是post请求，添加以下设置
+					//设置响应消息头
+					xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+					否则服务器接受到的参数值是null
+					
+		step3、绑定事件函数
+			xhr.onreadystatechange=function(){}
+		step4、发请求，调用send方法
+			xhr.send(null);//get请求
+			xhr.send("username=zs");//post请求
+
+	如果ajax对象发请求时，采用的是get请求方式，那么IE浏览器会有以下两个问题：
+		a、缓存问题
+			如果是get请求，IE浏览器会将数据保存下来，当再次发送请求时，
+			如果请求地址未发生改变，则浏览器会将缓存中的数据返回，
+			并不会真正的向服务器发送新的请求
+			
+			解决方案：
+				--把请求方式改成post
+				--在请求地址后追加参数，比如new Date().getTime()
+		b、中文乱码
+			如果是get请求，IE浏览器在处理参数时，使用的是gbk编码格式，
+			而chrom/firefox采用的是utf-8
+			
+			encodeURI(uri)===>将uri中的数据采用utf-8的格式处理
+
+
+	向服务器发请求
+		浏览器--->服务器
+		ajax--->服务器
+	区别：
+		浏览器会销毁当前页面，用户在原页面上输入的数据不复存在
+		服务器响应回来的是一个新的页面，如果希望局部更新数据，
+		减少浏览器与服务器的数据交互量，可以使用ajax对象发请求
+
+=================================================================
+=================================================================
+
+第十二天
+
+1、ajax优势
+	a、页面无刷新
+	b、不打断用户的操作，体验度较好
+	c、按需获取数据，局部更新页面，减少了浏览器与服务器的数据交互量
+	d、是浏览器的标准技术，不需要安装任何插件
+
+2、JSON
+	javascript object notation
+	是一种轻量级的数据交换语言规范，通常用于浏览器与服务器的数据交换。
+	比如将服务器的数据转成json格式的字符串发送给浏览器
+	
+	轻量级：相对于xml而言，json写起来更简单，解析的速度更快
+	数据交换：将数据转成一个中间的、与平台无关的数据类型，交给另一方处理
+
+	
+补充：
+	js对象创建语法
+	function User(name,age){
+		this.name=name;
+		this.age=age;
+	}
+	
+	var obj=new User("zs",10);
+	
+	var obj=new Object();
+	obj.name="zs";
+	obj.age=10;
+	obj.play=function(){alert();}
+	
+	var obj={"name":"zs","age":"10",""""}
+	
+	
+	json语法：
+		{"属性名":属性值,"属性名":属性值}
+		属性名：必须加""
+		属性值：看数据类型，如果是String类型，需要加""
+		
+		js中数据类型String number boolean object null
+		
+		js语法表示的是一个js对象
+			{"name":"zs","age":"10"}
+		json语法表示一个js数组对象:
+			{(),(),()}
+
+
+		如何将java对象转成json格式的字符串?
+			单个对象：JSONObject.fromObject(obj).toString();
+			多个对象：JSONArray.fromObject(obj).toString();
+			
+			注：
+			如果数据类型是Date，默认情况下会将Date对象中所有属性做成json返回，
+			可以通过配置制定转换的格式
+			JsonConfig config=new JsonConfig();
+			//给config对象注册处理器
+			config.registerJsonValueProcessor(Date.class, new DateProcessor());
+			String data=JSONObject.fromObject(u,config).toString();
+		如何将json格式的字符串转成js对象?
+			evalJSON()--->引入prototype.js
+
+练习：二级联动(使用json技术实现)
+	如何同时使用prototype.js与jquery.js文件？
+		由于这两个文件中都有一个函数名叫$，为了避免冲突，
+		可以给jquery文件中的$函数重新命名
+		比如：var $a=jQuery.noConflict();
+练习：热卖商品动态展示
+	每隔5秒钟，查看当前销量最好的前三件商品信息
+	step1、create table sale(
+			id int primary key auto_increment,
+			name varchar(20),
+			qty int
+			
+			);
+			
+			insert into sale values(null,'小米手机',100);
+			insert into sale values(null,'小米手环',90);
+			insert into sale values(null,'小米电视',99);
+			insert into sale values(null,'小米盒子',102);
+			insert into sale values(null,'小米净化器',80);
+	step2：定义实体类Sale
+	step3、写接口
+			List<Sale> findTop() throws Exception;
+	step4、写实现类
+		select * from sale order by qty desc limit 3;
+	step5、ActionServlet
+		调用DAO的findTop()--->jsonStr
+	step6、sale.jsp
+		<div></div>
+		<body onload="">
+			onload事件中调用ajax对象向服务器发请求
+			jsonStr--->js数组对象
+			
+		当前销售最好的三件商品：
+			商品名称：***   销售数量：****
+			商品名称：***   销售数量：****
+			商品名称：***   销售数量：****
+			
+		每隔5秒钟，刷新一次
+		
+		
+		
+		
+		
+二级联动：(course.jsp)
+	<div>
+		<span>课程方向：</span>
+		<a></a>
+	</div>
+	
+	<div>
+		<span>课程内容：</span>
+		<a></a>
+	</div>
+	一级：课程方向 java web
+	二级：课程内容 oop  jdbc  ajax
+		课程方向的数据：动态从数据库获取
+			create table course(
+				id int primary key auto_increment,
+				name varchar(20)
+			);
+
+			insert into course values(null,'java');
+			insert into course values(null,'web');
+		课程内容的数据：动态从数据库获取
+			create table lore(
+				id int primary key auto_increment,
+				name varchar(20),
+				course_id int
+			);
+			
+			insert into lore values(null,'oop',1);
+			insert into lore values(null,'ajax',1);
+			
+			insert into lore values(null,'spring',1);
+			insert into lore values(null,'nodejs',2);
+			insert into lore values(null,'bootstrap',2);
+			
+=========================================================================
+=========================================================================
+
+第十三天
+
+1、jQuery对ajax的支持
+	$.ajax(option);
+		option:是一个类似于{"key":value,"key":value...}的js对象
+		key的类型：
+			url:请求地址
+			type：请求类型get/post
+			data：参数{"name":"value"}或者"name=value"
+			dataType:服务器预期返回的数据类型json、script、html、xml等等
+			success:成功的回调函数
+					function(data,statusTxt){
+						//data:服务器返回的数据，JQuery已将其转换为js对象
+						//statusTxt:状态描述信息
+					}
+			error:失败的回调函数
+					function(xhr,statusTxt,errorThrow){
+						//xhr：ajax对象
+						//statusTxt:状态描述信息
+						//errorThrow:与statusTxt只能用一个
+					}
+
+2、简写
+	$.get(url,[data],[callback],[dataType]);	
+	$.post(url,[data],[callback],[dataType]);
+		url:请求地址
+		data:请求参数
+		callback:成功的回调函数
+		dataType:预期服务器返回的数据类型
+
+3、$().load(url)
+	将服务器返回的数据插入到当前dom元素中
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+快捷键：
+	
+ctrl+shift+R搜索自己工程下的类
+ctrl+shift+T搜索API类
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

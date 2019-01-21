@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<servlet>
+		<servlet-name>servlet02</servlet-name>
+		<servlet-class>web.AddEmpServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>servlet02</servlet-name>
+		<url-pattern>/add</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>selectemp</servlet-name>
+		<servlet-class>web.ListEmpServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>selectemp</servlet-name>
+		<url-pattern>/list</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>delete</servlet-name>
+		<servlet-class>web.DeleteEmpServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>delete</servlet-name>
+		<url-pattern>/del</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>load</servlet-name>
+		<servlet-class>web.LoadEmpServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>load</servlet-name>
+		<url-pattern>/loademp</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>modify</servlet-name>
+		<servlet-class>web.ModifyEmpServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>modify</servlet-name>
+		<url-pattern>/update</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	
+	
+	
+	
+	
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

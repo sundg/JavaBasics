@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<!-- 
+		name:包名
+		extends:继承父包
+		namesapce:命名空间
+	 -->
+	<package name="day01" namespace="/day01" extends="struts-default">
+		<!-- localhost:8080/struts01/day01/sayHello.action -->
+		<!-- 
+			package中可以配置多个action,action的name需要唯一
+			class：配置业务控制器的类路径，默认的类是ActionSupport
+		 -->
+		<action name="sayHello" class="action.HelloAction">
+			<!-- action中可以配置多个result 
+				result的name默认值是success，可以不配置
+			-->
+			<result name="success">/WEB-INF/hello.jsp</result>
+		</action>
+		<!-- 访问页面 -->
+		<action name="loginform">
+			<result>/WEB-INF/login.jsp</result>
+		</action>
+		<!-- 处理登录请求 -->
+		<action name="login" class="action.LoginAction2">
+			<!-- 登录成功 -->
+			<result>/WEB-INF/hello.jsp</result>
+			<!-- 登录失败 -->
+			<result name="fail">/WEB-INF/login.jsp</result>
+		</action>
+	</package>
+</struts>

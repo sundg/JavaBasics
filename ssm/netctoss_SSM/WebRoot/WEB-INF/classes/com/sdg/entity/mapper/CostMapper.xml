@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ 
+<mapper namespace="com.sdg.dao.CostMapper">
+	<select id="findAll" resultType="com.sdg.entity.Cost">
+		select * from cost
+	</select>
+	
+	<insert id="addCost" parameterType="com.sdg.entity.Cost">
+		insert into cost values(#{id},#{name},#{base_duration},#{base_cost},#{unit_cost},
+		#{status},#{description},#{createtime},#{startetime},1)
+	</insert>
+</mapper>

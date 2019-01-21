@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <servlet>
+    <servlet-name>AddCookieServlet</servlet-name>
+    <servlet-class>web.AddCookieServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>FindServlet</servlet-name>
+    <servlet-class>web.FindServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Find_AddCookieServlet</servlet-name>
+    <servlet-class>web.Find_AddCookieServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DelCookieServlet</servlet-name>
+    <servlet-class>web.DelCookieServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Find_AddCookieServlet2</servlet-name>
+    <servlet-class>web.Find_AddCookieServlet2</servlet-class>
+  </servlet>
+
+
+
+
+  <servlet-mapping>
+    <servlet-name>AddCookieServlet</servlet-name>
+    <url-pattern>/AddCookieServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindServlet</servlet-name>
+    <url-pattern>/findServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Find_AddCookieServlet</servlet-name>
+    <url-pattern>/findAddServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DelCookieServlet</servlet-name>
+    <url-pattern>/DelCookieServlet</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>Find_AddCookieServlet2</servlet-name>
+    <url-pattern>/findAddServlet2</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  <servlet>
+  	<servlet-name>addcookie</servlet-name>
+  	<servlet-class>practise.cookie.AddCookie</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>FindCookie</servlet-name>
+    <servlet-class>practise.cookie.FindCookie</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DelCookie</servlet-name>
+    <servlet-class>practise.cookie.DelCookie</servlet-class>
+  </servlet>
+
+
+  
+  <servlet-mapping>
+  	<servlet-name>addcookie</servlet-name>
+  	<url-pattern>/add</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindCookie</servlet-name>
+    <url-pattern>/find</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DelCookie</servlet-name>
+    <url-pattern>/del</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

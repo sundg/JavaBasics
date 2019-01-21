@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="servlet10_sun"
+  id="myeclipse.1508236793212"
+  context-root="/servlet10_sun"
+  j2ee-spec="5.0"
+  archive="servlet10_sun.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<package name="main" namespace="/main" extends="common">
+		<action name="main">
+			<result>/WEB-INF/main.jsp</result>
+		</action>
+	</package>
+	<!-- 登录模块 -->
+	<package name="login" namespace="/login" extends="json-default">
+		
+		
+		
+		<!-- localhost:8080/netctoss/login/login.action -->
+		<action name="loginform">
+			<result>/WEB-INF/login/login.jsp</result>
+		</action>
+		
+		<action name="login" class="action.LoginAction">
+			<result name="success" type="redirectAction">
+				<param name="namespace">/main</param>
+				<param name="actionName">main</param>
+			</result>
+			<result name="fail" type="redirectAction">loginform</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		
+		
+		<!-- 获取验证码图片 -->
+		<action name="valicode" class="action.ValicodeAction">
+			<!-- 
+				stream类型对应的处理类是StreamResult
+				该类用来处理二进制信息,需要给StreamResult传递一个参数，
+				参数名是inputName，参数值时图片输入流
+			 -->
+			<result type="stream">
+				<param name="inputName">ins</param>
+				<!-- 设置响应数据类型 -->
+				<param name="contentType">image/jpeg</param>
+			</result>
+		</action>
+		
+		<action name="checkValicode" class="action.CheckValicodeAction">
+			<result name="success" type="json">
+				<!-- 指定返回的数据 -->
+				<param name="root">flag</param>
+			</result>
+		</action>
+	</package>
+</struts>

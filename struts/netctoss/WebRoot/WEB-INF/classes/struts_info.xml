@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<!-- 资费管理模块 -->
+	<package name="cost" namespace="/cost" extends="json-default">
+		<interceptors>
+			<interceptor name="checklogin" class="com.sdg.interceptor.CheckLoginInterceptor"></interceptor>
+			<interceptor-stack name="netctoss">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="checklogin"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- localhost:8080/netctoss/cost/feelist.action -->
+		<action name="feelist" class="action.FeeListAction">
+			<interceptor-ref name="netctoss"></interceptor-ref>
+			<result>/WEB-INF/cost/fee_list.jsp</result>
+			<result name="login" type="redirectAction">
+				<!-- 指定包的路径 -->
+				<param name="namespace">/login</param>
+				<!-- 指定action的路径 -->
+				<param name="actionName">loginform</param>
+			</result>
+		</action>
+		<!-- 删除-->
+		<action name="del" class="action.fee.DelCostAction">
+			<result name="success" type="redirectAction">feelist</result>
+			<result name="fail" type="redirectAction">feelist</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		<!-- 启用资费 -->
+		<action name="start" class="action.fee.StartCostAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 暂停资费 -->
+		<action name="stop" class="action.fee.StopFeeAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 资费详细信息 -->
+		<action name="detail" class="action.fee.DetailCostAction">
+			<result>/WEB-INF/cost/detailCost.jsp</result>
+		</action>
+		<action name="back">
+			<result type="redirectAction">feelist?page=${page}</result>
+		</action>
+		<!-- 修改 -->
+		<action name="modify" class="action.fee.ModifyCostAction">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<action name="update" class="action.fee.UpdateCostAction">
+			<result type="redirectAction">feelist?page=${page}</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		<!-- 加载更新页面 -->
+		<action name="load" class="action.fee.UpdateLoadAction" method="load">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<!-- 更新页面 -->
+		<action name="updatecost" class="action.fee.UpdateLoadAction" method="update">
+			<result>/WEB-INF/cost/modify.jsp</result>
+		</action>
+		<action name="fee_add">
+			<result>/WEB-INF/cost/fee_add.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	
+	<!-- 登录模块 -->
+	<package name="login" namespace="/login" extends="json-default">
+		<action name="main">
+			<result>/WEB-INF/main.jsp</result>
+		</action>
+		
+		
+		<!-- localhost:8080/netctoss/login/login.action -->
+		<action name="loginform">
+			<result>/WEB-INF/login/login.jsp</result>
+		</action>
+		
+		<action name="login" class="action.LoginAction">
+			<result name="success" type="redirectAction">main</result>
+			<result name="fail" type="redirectAction">loginform</result>
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+		
+		
+		<!-- 获取验证码图片 -->
+		<action name="valicode" class="action.ValicodeAction">
+			<!-- 
+				stream类型对应的处理类是StreamResult
+				该类用来处理二进制信息,需要给StreamResult传递一个参数，
+				参数名是inputName，参数值时图片输入流
+			 -->
+			<result type="stream">
+				<param name="inputName">ins</param>
+				<!-- 设置响应数据类型 -->
+				<param name="contentType">image/jpeg</param>
+			</result>
+		</action>
+		
+		<action name="checkValicode" class="action.CheckValicodeAction">
+			<result name="success" type="json">
+				<!-- 指定返回的数据 -->
+				<param name="root">flag</param>
+			</result>
+		</action>
+	</package>
+</struts>

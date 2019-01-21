@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<!-- 配置全局参数
+		在当前web.xml文件中，所有的servlet都可以访问
+	 -->
+	<context-param>
+		<param-name>version</param-name>
+		<param-value>2.0</param-value>
+	</context-param>
+	
+	<!-- 配置监听器 -->
+	<listener>
+		<listener-class>listener.SessionCountListener</listener-class>
+	</listener>
+	
+	<!-- 配置过滤器 -->
+	<filter>
+		<filter-name>commentFilter1</filter-name>
+		<filter-class>filter.CommentFilter1</filter-class>
+		<!-- 配置初始化参数 -->
+		<init-param>
+			<param-name>illegal</param-name>
+			<param-value>cat</param-value>
+		</init-param>
+	</filter>	
+
+	<filter-mapping>
+		<filter-name>commentFilter1</filter-name>
+		<url-pattern>/comment</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>commentfilter2</filter-name>
+		<filter-class>filter.CommentFilter2</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>commentfilter2</filter-name>
+		<url-pattern>/comment</url-pattern>
+	</filter-mapping>
+	
+  <servlet>
+    <servlet-name>CommentServlet</servlet-name>
+    <servlet-class>web.CommentServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SomeServlet</servlet-name>
+    <servlet-class>web.SomeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>OtherServlet</servlet-name>
+    <servlet-class>web.OtherServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UploadFileServlet</servlet-name>
+    <servlet-class>web.UploadFileServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DelFileServlet</servlet-name>
+    <servlet-class>web.DelFileServlet</servlet-class>
+  </servlet>
+
+
+
+
+
+  <servlet-mapping>
+    <servlet-name>CommentServlet</servlet-name>
+    <url-pattern>/comment</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>SomeServlet</servlet-name>
+    <url-pattern>/some</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>OtherServlet</servlet-name>
+    <url-pattern>/other</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadFileServlet</servlet-name>
+    <url-pattern>/uploadFile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DelFileServlet</servlet-name>
+    <url-pattern>/del</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
